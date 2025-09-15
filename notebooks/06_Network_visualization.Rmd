@@ -1,0 +1,269 @@
+# Microbial Network Visualization Workflow with NetCoMi
+
+This document explains each step of the microbial network visualization workflow, including code and commentary.
+
+## Package Installation
+
+Install all required R packages for network analysis. These packages provide functions for data manipulation, correlation analysis, and network construction.
+```{r pressure, echo=FALSE}
+# Required packages
+install.packages("remotes")
+remotes::install_github("drjingma/metaMINT")
+install.packages("magrittr") 
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("latentcor")
+install.packages("devtools")
+install.packages("BiocManager")
+
+BiocManager::install("limma")
+
+devtools::install_github("stefpeschel/NetCoMi", 
+                         dependencies = c("Depends", "Imports", "LinkingTo"),
+                         repos = c("https://cloud.r-project.org/",
+                                   BiocManager::repositories()))
+```
+
+## Library Loading
+Load the installed libraries into the R session. This step is necessary every time you start R and want to use functions like %>% from magrittr or dplyr, as well as network analysis functions from NetCoMi and limma.
+
+```{r}
+library(magrittr) # needs to be run every time you start R and want to use %>%
+library(dplyr) # alternatively, this also loads %>%
+library(tidyr)
+library(NetCoMi)
+library(limma)
+```
+
+## Network Construction Functions
+
+Define custom functions for network construction and visualization.
+
+- construct_network() creates a network object from input data using partial correlation.
+- plot_network() visualizes the network with customizable node colors, shapes, and layout.
+
+```{r}
+construct_network <- function(data, mclr_counts) {
+  net <- netConstruct(
+    data = as.matrix(data), 
+    dataType = "partialCorr", 
+    sparsMethod = "none", 
+    normMethod = "none", 
+    seed = 42
+  )
+  net$normCounts1 <- mclr_counts
+  return(net)
+}
+
+plot_network <- function(props, layout, phyla_super, 
+                         phylcolors, title) {
+  plot(props,
+       layout = layout,
+       nodeSize = "normCounts",
+       featVecCol = phyla_super,
+       colorVec =  phylcolors,
+       nodeColor = "feature",
+       title1 = title,
+       labelFont = 47,
+       nodeShape = c("circle", "square"),
+       featVecShape = shapeVec,
+       showTitle = TRUE,
+       cexTitle = 2.3)
+}
+```
+
+## Data Import
+Read CSV files into R as data frames. These files contain count data, phylum labels, and matrices for different sample groups (main, healthy, allergic, diff).
+
+```{r}
+mclr_counts_ige <- read.csv('ABROGATE/data/all_counts_ige.csv', row.names = 1, check.names = FALSE)
+p_labels <- read.csv('ABROGATE/data/phylum_labels.csv', row.names = 1, check.names = FALSE)
+
+mclr_counts <- mclr_counts_ige[, 1:(ncol(mclr_sup_counts) - 104)]
+
+only_taxa_main_df <- read.csv('ABROGATE/data/super_matrix_only_taxa_main.csv', row.names = 1, check.names = FALSE) 
+only_taxa_healthy <- read.csv('ABROGATE/data/super_matrix_only_taxa_healthy.csv', row.names = 1, check.names = FALSE)
+only_taxa_allergic <- read.csv('ABROGATE/data/super_matrix_only_taxa_allergic.csv', row.names = 1, check.names = FALSE) 
+only_taxa_diff <- read.csv('ABROGATE/data/diff_only_taxa_matrix.csv', row.names = 1, check.names = FALSE) 
+```
+
+##  Network Construction and Analysis
+Construct networks for each sample group using the construct_network() function. The netAnalyze() function then analyzes each network, identifying clusters using the "cluster_fast_greedy" method.
+
+```{r}
+# Construct networks
+super_net_main <- construct_network(only_taxa_main_df, mclr_counts)
+super_net_healthy <- construct_network(only_taxa_healthy, mclr_counts)
+super_net_allergic <- construct_network(only_taxa_allergic, mclr_counts)
+
+super_net_diff <- construct_network(only_taxa_diff, mclr_counts)
+
+### Analyze networks
+props_super_main <- netAnalyze(super_net_main, clustMethod = "cluster_fast_greedy")
+props_super_healthy <- netAnalyze(super_net_healthy, clustMethod = "cluster_fast_greedy")
+props_super_allergic <- netAnalyze(super_net_allergic, clustMethod = "cluster_fast_greedy")
+
+props_super_diff <- netAnalyze(super_net_diff, clustMethod = "cluster_fast_greedy")
+```
+
+## Network Plotting
+Define color and shape vectors for plotting. Networks for each group are plotted and saved as SVG files, using consistent layouts for comparison. A legend for phylum colors is also created and saved.
+
+```{r}
+phylcolors <- c( "cyan","blue3","red","lawngreen","yellow","orange",
+                 "purple", "brown", "darkgreen",  "skyblue", "gold", 
+                 "darkred", "magenta", "coral")
+
+shapeVec <- sample(1, ncol(only_taxa_main_df), replace = TRUE)
+names(shapeVec) <- colnames(only_taxa_main_df)
+
+phyla_super <- factor(p_labels$phylum)
+names(phyla_super) <- colnames(mclr_sup_counts)
+
+# Create the main plot
+svg_filename <- "ABROGATE/plots/svg/taxa_network_main.svg"
+svg(svg_filename, width = 28, height = 28)
+p_super_main <- plot_network(props_super_main, NULL, phyla_super,
+                             phylcolors, "main")
+dev.off()
+
+# Save the healthy plot
+svg_filename <- "ABROGATE/plots/svg/taxa_network_healthy.svg"
+svg(svg_filename, width = 28, height = 28)
+p_super_healthy <- plot_network(props_super_healthy, p_super_main$layout, phyla_super, phylcolors, "healthy")
+dev.off()
+
+# Save the allergic plot
+svg_filename <- "ABROGATE/plots/svg/taxa_network_allergic.svg"
+svg(svg_filename, width = 28, height = 28)
+p_super_allergic <- plot_network(props_super_allergic, p_super_main$layout, phyla_super, phylcolors, "allergic")
+dev.off()
+
+# Save the diff plot
+svg_filename <- "ABROGATE/plots/svg/taxa_network_diff.svg"
+svg(svg_filename, width = 28, height = 28)
+p_super_diff <- plot_network(props_super_diff, p_super_main$layou, phyla_super, phylcolors, "diff")
+dev.off()
+
+svg_filename <- "ABROGATE/plots/svg/taxa_network_phyla_labels.svg"
+svg(svg_filename, width = 28, height = 28)
+p_super_main <- plot_network(props_super_main, NULL, phyla_super,
+                             phylcolors, "main")
+dev.off()
+```
+
+
+```{r}
+# Open a new SVG device for the phylum legend with larger dimensions
+svg("ABROGATE/plots/svg/phylum_taxa_legends.svg", width = 8, height = 28)
+
+# Create an empty plot to position the legend
+plot.new()
+legend("center", cex = 1.5, pt.cex = 2, title = "Phylum:",
+       legend = levels(phyla_super), col = phylcolors, bty = "n", pch = 16)
+
+# Close the SVG device
+dev.off()
+```
+
+## Taxa + IgE Analysis
+Repeat similar steps for datasets that include both taxa and IgE measurements. Networks are constructed, analyzed, and plotted for main, healthy, allergic, and diff groups.
+
+```{r}
+mclr_counts_ige <- read.csv('ABROGATE/data/all_counts_ige.csv', row.names = 1, check.names = FALSE)
+p_labels <- read.csv('ABROGATE/data/phylum_labels.csv', row.names = 1, check.names = FALSE)
+
+main_df <- read.csv('ABROGATE/data/super_matrix_main.csv', row.names = 1, check.names = FALSE) 
+healthy_df <- read.csv('ABROGATE/data/super_matrix_healthy.csv', row.names = 1, check.names = FALSE)
+allergic_df <- read.csv('ABROGATE/data/super_matrix_allergic.csv', row.names = 1, check.names = FALSE) 
+diff_df <- read.csv('ABROGATE/data/diff_matrix.csv', row.names = 1, check.names = FALSE) 
+```
+
+
+```{r}
+# Construct networks
+super_net_main_ige <- construct_network(main_df, mclr_counts_ige)
+super_net_healthy_ige <- construct_network(healthy_df, mclr_counts_ige)
+super_net_allergic_ige <- construct_network(allergic_df, mclr_counts_ige)
+
+super_net_diff_ige <- construct_network(diff_df, mclr_counts_ige)
+
+### Analyze networks
+props_super_main_ige <- netAnalyze(super_net_main_ige, clustMethod = "cluster_fast_greedy")
+props_super_healthy_ige <- netAnalyze(super_net_healthy_ige, clustMethod = "cluster_fast_greedy")
+props_super_allergic_ige <- netAnalyze(super_net_allergic_ige, clustMethod = "cluster_fast_greedy")
+
+props_super_diff_ige <- netAnalyze(super_net_diff_ige, clustMethod = "cluster_fast_greedy")
+```
+
+
+```{r}
+sorted_names <- colnames(main_df[, c(grep("^f__", names(main_df), value = TRUE), 
+                                     grep("^(?!f__)", names(main_df), value = TRUE, perl = TRUE))])
+
+shapeVec <- ifelse(grepl("^f__", sorted_names), 1, 2)
+names(shapeVec) <- sorted_names
+
+# Create the main plot
+svg_filename <- "ABROGATE/plots/svg/taxa_ige_network_main.svg"
+svg(svg_filename, width = 28, height = 28)
+p_super_main_ige <- plot_network(props_super_main_ige, NULL, phyla_super, phylcolors, "main")
+dev.off()
+
+
+# Save the healthy plot
+svg_filename <- "ABROGATE/plots/svg/taxa_ige_network_healthy.svg"
+svg(svg_filename, width = 28, height = 28)
+plot_network(props_super_healthy_ige, p_super_main_ige$layout, phyla_super, phylcolors, "healthy")
+dev.off()
+
+# Save the allergic plot
+svg_filename <- "ABROGATE/plots/svg/taxa_ige_network_allergic.svg"
+svg(svg_filename, width = 28, height = 28)
+plot_network(props_super_allergic_ige, p_super_main_ige$layout, phyla_super, phylcolors, "allergic")
+dev.off()
+
+# Save the diff plot
+svg_filename <- "ABROGATE/plots/svg/taxa_ige_network_diff.svg"
+svg(svg_filename, width = 28, height = 28)
+plot_network(props_super_diff_ige, p_super_main_ige$layout, phyla_super, phylcolors, "diff")
+dev.off()
+```
+
+## Plot the Difference
+Load filtered difference matrices, construct and analyze networks, and plot the resulting networks for visual comparison.
+
+```{r}
+ige_taxa_diff <- read.csv('ABROGATE/data/diff_matrix_filtered_ige.csv', 
+                          row.names = 1, check.names = FALSE) 
+taxa_diff <- read.csv('ABROGATE/data/diff_matrix_filtered.csv', 
+                      row.names = 1, check.names = FALSE) 
+
+# Construct networks
+diff_net_ige <- construct_network(ige_taxa_diff, mclr_counts_ige)
+props_diff_net_ige <- netAnalyze(diff_net_ige, clustMethod = "cluster_fast_greedy")
+
+diff_net <- construct_network(taxa_diff, mclr_counts_ige)
+props_diff_net <- netAnalyze(diff_net, clustMethod = "cluster_fast_greedy")
+
+# # Plot networks
+p_diff_net_ige <- plot_network(props_diff_net_ige, layout = NULL,
+                               phyla_super, phylcolors, "diff_ige")
+
+p_diff_net <- plot_network(props_diff_net,
+                           layout = p_diff_net_ige$layout,
+                           phyla_super, phylcolors, "diff")
+
+
+# Save the diff plots
+svg_filename <- "ABROGATE/plots/svg/taxa_ige_network_diff.svg"
+svg(svg_filename, width = 28, height = 28)
+plot_network(props_diff_net_ige, NULL, phyla_super, phylcolors, "diff_ige")
+dev.off()
+
+svg_filename <- "ABROGATE/plots/svg/taxa_network_diff.svg"
+svg(svg_filename, width = 28, height = 28)
+plot_network(props_diff_net, p_diff_net_ige$layout, phyla_super, phylcolors, "diff")
+dev.off()
+
+```

@@ -1,0 +1,9 @@
+# Ignore data files and outputs
+/data/
+/results/
+*.pyc
+__pycache__/
+.env
+*.env
+.DS_Store
+.ipynb_checkpoints/

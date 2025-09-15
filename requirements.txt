@@ -1,0 +1,16 @@
+jupyterlab-plotly
+scipy
+scikit-learn
+kaleido
+networkx
+matplotlib
+igraph
+seaborn
+bokeh
+pyvis
+ipywidgets
+selenium
+colorlover
+fastcluster
+gglasso
+numpy==1.22.4
