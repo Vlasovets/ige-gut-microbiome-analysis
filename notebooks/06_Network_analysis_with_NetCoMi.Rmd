@@ -1,0 +1,616 @@
+---
+title: "06_Network_analysis_with_NetCoMi"
+output: html_document
+date: "2025-12-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = "~/ABROGATE")
+```
+
+```{r}
+library(magrittr) # needs to be run every time you start R and want to use %>%
+library(dplyr) # alternatively, this also loads %>%
+library(tidyr)
+library(NetCoMi)
+library(limma)
+```
+
+
+```{r}
+## 1. Load your specific data
+data_files <- list(
+  healthy = 'data/counts_healthy_family.csv',
+  allergic = 'data/counts_allergic_family.csv',
+  D = 'data/counts_D_family.csv',
+  E = 'data/counts_E_family.csv'
+)
+
+# Load all datasets in one loop
+raw_counts <- lapply(data_files, function(file) {
+  t(read.csv(file, row.names = 1, check.names = FALSE))
+})
+
+# Verification
+cat("Data dimensions:\n")
+for(name in names(raw_counts)) {
+  cat(sprintf("%s group: %d samples x %d taxa\n", 
+              name, nrow(raw_counts[[name]]), ncol(raw_counts[[name]])))
+}
+
+## 2. Network Construction
+# Define common parameters once
+common_params <- list(
+  measure = "spieceasi",
+  measurePar = list(
+    method = "glasso", 
+    nlambda = 30, 
+    lambda.min.ratio = 0.01, 
+    pulsar.params = list(rep.num = 20)
+  ),
+  filtSamp = "none", 
+  filtTax = "highestVar",
+  filtTaxPar = list(highestVar = 50),
+  normMethod = "none", 
+  sparsMethod = "none", 
+  verbose = 3,
+  seed = 123456
+)
+
+# Function to construct network with common parameters
+construct_net <- function(data1, data2, params) {
+  do.call(netConstruct, c(list(data = data1, data2 = data2), params))
+}
+
+# Construct all networks
+networks <- list(
+  any = construct_net(raw_counts$healthy, raw_counts$allergic, common_params),
+  D = construct_net(raw_counts$healthy, raw_counts$D, common_params),
+  E = construct_net(raw_counts$healthy, raw_counts$E, common_params)
+)
+
+# Create copies of all networks
+networks_copy <- networks
+
+# Assign to individual variables
+net_any <- networks$any
+net_D <- networks$D
+net_E <- networks$E
+
+# Individual copies (if you need to modify them separately)
+net_any_copy <- networks_copy$any
+net_D_copy <- networks_copy$D
+net_E_copy <- networks_copy$E
+```
+
+Since the code uses filtTax = "highestVar" with highestVar = 50, which selects taxa from the combined dataset :
+
+Network 'any': Top 50 variance taxa from (healthy + all allergic)
+Network 'D': Top 50 variance taxa from (healthy + cluster D)
+Network 'E': Top 50 variance taxa from (healthy + cluster E)
+
+Since cluster D and E have different microbial compositions than the full allergic cohort, the variance profiles differ, resulting in different 50-taxa sets. Even though SPIEC-EASI estimates the healthy network independently in each case, it operates on different taxa subsets, producing different edge structures .
+
+
+
+TO GET IDENTICAL NON-IGE NETWORKS:
+```{r}
+# # Filter healthy data first
+# healthy_filtered <- raw_counts$healthy
+# healthy_var <- apply(healthy_filtered, 2, var)
+# top_taxa <- names(sort(healthy_var, decreasing = TRUE)[1:50])
+# 
+# # Use same taxa for all groups
+# allergic_subset <- raw_counts$allergic[, top_taxa]
+# D_subset <- raw_counts$D[, top_taxa]
+# E_subset <- raw_counts$E[, top_taxa]
+# 
+# # Remove filtering from network construction
+# common_params$filtTax <- "none"
+# common_params$filtTaxPar <- NULL
+# 
+# networks <- list(
+#   any = construct_net(healthy_filtered[, top_taxa], allergic_subset, common_params),
+#   D = construct_net(healthy_filtered[, top_taxa], D_subset, common_params),
+#   E = construct_net(healthy_filtered[, top_taxa], E_subset, common_params)
+# )
+```
+
+
+```{r}
+## Load phylum labels and create color mapping
+p_labels <- read.csv('data/phylum_labels_only_taxa.csv',
+                     row.names = 1, check.names = FALSE)
+
+cat("Phylum label structure:\n")
+print(head(p_labels))
+cat("\nUnique phyla:\n")
+print(table(p_labels$phylum))
+
+# Colorblind-friendly palette with 13 colors
+phylcolors <- c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288", 
+                "#AA4499", "#44AA99", "#999933", "#882255", "#661100", 
+                "#6699CC", "#888888", "#E69F00")
+
+# Get all unique phyla from the complete dataset
+unique_phyla <- sort(unique(p_labels$phylum))
+
+# Check we have enough colors
+if(length(unique_phyla) > length(phylcolors)) {
+  stop("Not enough colors for all phyla!")
+}
+
+# Trim and name colors
+phylcolors <- phylcolors[1:length(unique_phyla)]
+names(phylcolors) <- unique_phyla
+
+cat("\nPhylum to color mapping:\n")
+print(phylcolors)
+
+## Create a function to map taxa to colors
+get_node_colors <- function(taxa_names, p_labels, phylcolors) {
+  phyla <- p_labels[taxa_names, "phylum"]
+  colors <- phylcolors[phyla]
+  names(colors) <- taxa_names
+  return(colors)
+}
+
+## Create output directories
+dir.create("plots/png", showWarnings = FALSE, recursive = TRUE)
+dir.create("plots/svg", showWarnings = FALSE, recursive = TRUE)
+
+# Network configurations
+network_configs <- list(
+  any = list(
+    net = net_any,
+    filename_png = "plots/png/partial_corr_allergic_vs_healthy.png",
+    filename_svg = "plots/svg/partial_corr_allergic_vs_healthy.svg",
+    groups = c("non-IgE", "IgE")
+  ),
+  D = list(
+    net = net_D,
+    filename_png = "plots/png/partial_corr_D_vs_healthy.png",
+    filename_svg = "plots/svg/partial_corr_D_vs_healthy.svg",
+    groups = c("non-IgE", "Cluster D")
+  ),
+  E = list(
+    net = net_E,
+    filename_png = "plots/png/partial_corr_E_vs_healthy.png",
+    filename_svg = "plots/svg/partial_corr_E_vs_healthy.svg",
+    groups = c("non-IgE", "Cluster E")
+  )
+)
+
+## STEP 1: Find common taxa
+cat("\nFinding common taxa across all healthy networks...\n")
+
+common_taxa_healthy <- rownames(network_configs$any$net$adjaMat1)
+for(name in names(network_configs)) {
+  taxa_current <- rownames(network_configs[[name]]$net$adjaMat1)
+  common_taxa_healthy <- intersect(common_taxa_healthy, taxa_current)
+}
+
+cat("Common taxa in all healthy networks:", length(common_taxa_healthy), "\n")
+
+## STEP 2: Create reference layout
+cat("\nCreating reference layout from first network (common taxa only)...\n")
+
+net_any_common <- net_any
+net_any_common$adjaMat1 <- net_any$adjaMat1[common_taxa_healthy, common_taxa_healthy]
+net_any_common$adjaMat2 <- net_any$adjaMat2[common_taxa_healthy, common_taxa_healthy]
+net_any_common$assoMat1 <- net_any$assoMat1[common_taxa_healthy, common_taxa_healthy]
+net_any_common$assoMat2 <- net_any$assoMat2[common_taxa_healthy, common_taxa_healthy]
+
+props_any <- netAnalyze(net_any_common)
+
+# Get all nodes and assign colors
+all_nodes_any <- union(rownames(net_any_common$adjaMat1), rownames(net_any_common$adjaMat2))
+node_colors_any <- get_node_colors(all_nodes_any, p_labels, phylcolors)
+
+# Create phylum vector for legend
+phylum_vector_common <- p_labels[all_nodes_any, "phylum"]
+names(phylum_vector_common) <- all_nodes_any
+
+p_any <- plot(props_any, 
+              groupNames = network_configs$any$groups,
+              sameLayout = TRUE,
+              rmSingles = "inboth",
+              nodeColor = "colorVec",
+              colorVec = node_colors_any,
+              featVecCol = phylum_vector_common,
+              legendArgs = list(title = "Phylum"),
+              repulsion = 0.9,
+              labelScale = FALSE,
+              cexLabels = 1.0,
+              labelCol = "black")
+
+reference_layout <- p_any$layout$layout1
+reference_taxa <- rownames(reference_layout)
+
+cat("Reference layout created with", nrow(reference_layout), "nodes\n")
+
+## STEP 3: Save first network plots
+results <- list()
+
+cat("\nSaving plots for network: any (IgE vs non-IgE)\n")
+
+# PNG - 4000 x 2500 pixels at 300 DPI = 13.33 x 8.33 inches
+png(network_configs$any$filename_png, width = 4000, height = 2500, res = 300)
+plot(props_any, 
+     groupNames = network_configs$any$groups,
+     sameLayout = TRUE,
+     rmSingles = "inboth",
+     nodeColor = "colorVec",
+     colorVec = node_colors_any,
+     featVecCol = phylum_vector_common,
+     legendArgs = list(title = "Phylum"),
+     repulsion = 0.9,
+     labelScale = FALSE,
+     cexLabels = 1.0,
+     labelCol = "black")
+dev.off()
+cat(sprintf("  PNG saved: %s\n", network_configs$any$filename_png))
+
+# SVG - same dimensions as PNG: 13.33 x 8.33 inches
+svg(network_configs$any$filename_svg, width = 13.33, height = 8.33)
+plot(props_any, 
+     groupNames = network_configs$any$groups,
+     sameLayout = TRUE,
+     rmSingles = "inboth",
+     nodeColor = "colorVec",
+     colorVec = node_colors_any,
+     featVecCol = phylum_vector_common,
+     legendArgs = list(title = "Phylum"),
+     repulsion = 0.9,
+     labelScale = FALSE,
+     cexLabels = 1.0,
+     labelCol = "black")
+dev.off()
+cat(sprintf("  SVG saved: %s\n", network_configs$any$filename_svg))
+
+# Create differential network for 'any'
+taxa_any <- rownames(p_any$layout$layout1)
+net_any_filtered <- net_any_common
+net_any_filtered$assoMat1 <- net_any_common$assoMat1[taxa_any, taxa_any]
+net_any_filtered$assoMat2 <- net_any_common$assoMat2[taxa_any, taxa_any]
+net_any_filtered$assoEst1 <- net_any_common$assoEst1[taxa_any, taxa_any]
+net_any_filtered$assoEst2 <- net_any_common$assoEst2[taxa_any, taxa_any]
+
+diff_any <- diffnet(net_any_filtered, diffMethod = "threshold", 
+                    diffThresh = 0.0, adjust = "none")
+
+results$any <- list(props = props_any, plot = p_any, diff = diff_any, 
+                    net_filtered = net_any_filtered, 
+                    node_colors = node_colors_any,
+                    phylum_vector = phylum_vector_common)
+
+# Process D and E networks
+for(name in c("D", "E")) {
+  config <- network_configs[[name]]
+  cat(sprintf("\nProcessing network: %s (using shared non-IgE layout)\n", name))
+  
+  taxa_in_network <- intersect(reference_taxa, rownames(config$net$adjaMat1))
+  
+  if(length(taxa_in_network) < length(reference_taxa)) {
+    cat(sprintf("  Warning: Only %d/%d reference taxa found\n", 
+                length(taxa_in_network), length(reference_taxa)))
+  }
+  
+  net_filtered <- config$net
+  net_filtered$adjaMat1 <- config$net$adjaMat1[taxa_in_network, taxa_in_network]
+  net_filtered$adjaMat2 <- config$net$adjaMat2[taxa_in_network, taxa_in_network]
+  net_filtered$assoMat1 <- config$net$assoMat1[taxa_in_network, taxa_in_network]
+  net_filtered$assoMat2 <- config$net$assoMat2[taxa_in_network, taxa_in_network]
+  
+  props <- netAnalyze(net_filtered)
+  
+  degree1 <- rowSums(net_filtered$adjaMat1 != 0)
+  degree2 <- rowSums(net_filtered$adjaMat2 != 0)
+  has_edges <- (degree1 > 0) | (degree2 > 0)
+  taxa_with_edges <- taxa_in_network[has_edges]
+  
+  cat(sprintf("  Removed %d singletons\n", sum(!has_edges)))
+  
+  layout_subset <- reference_layout[taxa_with_edges, , drop = FALSE]
+  
+  net_filtered$adjaMat1 <- net_filtered$adjaMat1[taxa_with_edges, taxa_with_edges]
+  net_filtered$adjaMat2 <- net_filtered$adjaMat2[taxa_with_edges, taxa_with_edges]
+  net_filtered$assoMat1 <- net_filtered$assoMat1[taxa_with_edges, taxa_with_edges]
+  net_filtered$assoMat2 <- net_filtered$assoMat2[taxa_with_edges, taxa_with_edges]
+  
+  props <- netAnalyze(net_filtered)
+  
+  # Get node colors for this network
+  all_nodes <- union(rownames(net_filtered$adjaMat1), rownames(net_filtered$adjaMat2))
+  node_colors <- get_node_colors(all_nodes, p_labels, phylcolors)
+  
+  # Create phylum vector for legend
+  phylum_vector <- p_labels[all_nodes, "phylum"]
+  names(phylum_vector) <- all_nodes
+  
+  # PNG
+  png(config$filename_png, width = 4000, height = 2500, res = 300)
+  p <- plot(props, 
+            groupNames = config$groups,
+            layout = layout_subset,
+            sameLayout = TRUE,
+            rmSingles = FALSE,
+            nodeColor = "colorVec",
+            colorVec = node_colors,
+            featVecCol = phylum_vector,
+            legendArgs = list(title = "Phylum"),
+            repulsion = 0.9,
+            labelScale = FALSE,
+            cexLabels = 1.0,
+            labelCol = "black")
+  dev.off()
+  cat(sprintf("  PNG saved: %s\n", config$filename_png))
+  
+  # SVG - same dimensions as PNG
+  svg(config$filename_svg, width = 13.33, height = 8.33)
+  p <- plot(props, 
+            groupNames = config$groups,
+            layout = layout_subset,
+            sameLayout = TRUE,
+            rmSingles = FALSE,
+            nodeColor = "colorVec",
+            colorVec = node_colors,
+            featVecCol = phylum_vector,
+            legendArgs = list(title = "Phylum"),
+            repulsion = 0.9,
+            labelScale = FALSE,
+            cexLabels = 1.0,
+            labelCol = "black")
+  dev.off()
+  cat(sprintf("  SVG saved: %s\n", config$filename_svg))
+  
+  # Differential network
+  taxa_plot <- rownames(p$layout$layout1)
+  net_diff <- net_filtered
+  net_diff$assoMat1 <- net_filtered$assoMat1[taxa_plot, taxa_plot]
+  net_diff$assoMat2 <- net_filtered$assoMat2[taxa_plot, taxa_plot]
+  net_diff$assoEst1 <- net_filtered$assoEst1[taxa_plot, taxa_plot]
+  net_diff$assoEst2 <- net_filtered$assoEst2[taxa_plot, taxa_plot]
+  
+  diff_net <- diffnet(net_diff, diffMethod = "threshold", 
+                      diffThresh = 0.0, adjust = "none")
+  
+  results[[name]] <- list(props = props, plot = p, diff = diff_net, 
+                          net_filtered = net_diff, 
+                          node_colors = node_colors,
+                          phylum_vector = phylum_vector)
+}
+
+# Access results
+props_any <- results$any$props
+p_any <- results$any$plot
+diff_any <- results$any$diff
+
+props_D <- results$D$props
+p_D <- results$D$plot
+diff_D <- results$D$diff
+
+props_E <- results$E$props
+p_E <- results$E$plot
+diff_E <- results$E$diff
+
+cat("\nAll networks processed successfully!\n")
+cat("PNG plots saved to plots/png/\n")
+cat("SVG plots saved to plots/svg/\n")
+```
+
+
+
+```{r}
+## 4. Plot Differential Networks with Shared Layout
+
+# Define differential plot parameters
+diff_plot_params <- list(
+  rmSingles = FALSE,
+  mar = c(2, 2, 4, 10),
+  edgeCol = c("white",    # + | + (both positive, stronger in group 2) - HIDDEN
+              "#009E73",  # + | 0 (positive to zero) - teal/green
+              "#0072B2",  # + | - (positive to negative) - blue
+              "#E69F00",  # - | + (negative to positive) - orange
+              "white",    # - | 0 (negative to zero) - HIDDEN
+              "white",    # - | - (both negative) - HIDDEN
+              "#F0E442",  # 0 | + (zero to positive) - yellow
+              "white",    # 0 | 0 (no edge in either) - HIDDEN
+              "#D55E00"), # 0 | - (zero to negative) - red-orange
+  edgeWidth = 2.0,
+  labelScale = FALSE,
+  cexLabels = 1.0
+)
+
+# Function to plot differential network with proper layout matching
+plot_diffnet_safe <- function(diff_obj, base_plot,
+                              filename_png, filename_svg, title, plot_params) {
+  
+  # Use the exact layout from the corresponding base network plot
+  layout_to_use <- base_plot$layout$layout1
+  
+  cat(sprintf("  Base network layout: %d nodes\n", nrow(layout_to_use)))
+  
+  # PNG plot
+  png(filename_png, width = 4000, height = 2500, res = 300)
+  plot(diff_obj, 
+       layout = layout_to_use, 
+       main = title,
+       rmSingles = FALSE,
+       mar = plot_params$mar,
+       edgeCol = plot_params$edgeCol,
+       edgeWidth = plot_params$edgeWidth,
+       labelScale = plot_params$labelScale,
+       cexLabels = plot_params$cexLabels,
+       labelCol = "black")
+  dev.off()
+  
+  # SVG plot
+  svg(filename_svg, width = 13.33, height = 8.33)
+  plot(diff_obj, 
+       layout = layout_to_use, 
+       main = title,
+       rmSingles = FALSE,
+       mar = plot_params$mar,
+       edgeCol = plot_params$edgeCol,
+       edgeWidth = plot_params$edgeWidth,
+       labelScale = plot_params$labelScale,
+       cexLabels = plot_params$cexLabels,
+       labelCol = "black")
+  dev.off()
+  
+  cat(sprintf("  PNG saved: %s\n", filename_png))
+  cat(sprintf("  SVG saved: %s\n", filename_svg))
+}
+
+# Plot all differential networks using their corresponding base network layouts
+cat("\nPlotting differential networks with matched layouts...\n")
+
+# Plot differential network for 'any'
+cat("\nProcessing differential network: any (non-IgE vs IgE)\n")
+plot_diffnet_safe(
+  diff_obj = results$any$diff,
+  base_plot = results$any$plot,
+  filename_png = "plots/png/differential_allergic_vs_healthy.png",
+  filename_svg = "plots/svg/differential_allergic_vs_healthy.svg",
+  title = "Differential Network: non-IgE vs IgE",
+  plot_params = diff_plot_params
+)
+
+# Plot differential network for 'D'
+cat("\nProcessing differential network: D (non-IgE vs Cluster D)\n")
+plot_diffnet_safe(
+  diff_obj = results$D$diff,
+  base_plot = results$D$plot,
+  filename_png = "plots/png/differential_D_vs_healthy.png",
+  filename_svg = "plots/svg/differential_D_vs_healthy.svg",
+  title = "Differential Network: non-IgE vs Cluster D",
+  plot_params = diff_plot_params
+)
+
+# Plot differential network for 'E'
+cat("\nProcessing differential network: E (non-IgE vs Cluster E)\n")
+plot_diffnet_safe(
+  diff_obj = results$E$diff,
+  base_plot = results$E$plot,
+  filename_png = "plots/png/differential_E_vs_healthy.png",
+  filename_svg = "plots/svg/differential_E_vs_healthy.svg",
+  title = "Differential Network: non-IgE vs Cluster E",
+  plot_params = diff_plot_params
+)
+
+cat("\nAll differential network plots completed!\n")
+cat("PNG plots saved to plots/png/\n")
+cat("SVG plots saved to plots/svg/\n")
+cat("\nNOTE: Only edges showing significant differences are displayed (colored).\n")
+cat("Grey edges (non-significant differences) are hidden.\n")
+
+```
+
+```{r}
+# Define edge colors (matching your differential network settings)
+edgeCol <- c("white",    # + | + (both positive, stronger in group 2) - HIDDEN
+             "#009E73",  # + | 0 (positive to zero) - teal/green
+             "#0072B2",  # + | - (positive to negative) - blue
+             "#E69F00",  # - | + (negative to positive) - orange
+             "white",    # - | 0 (negative to zero) - HIDDEN
+             "white",    # - | - (both negative) - HIDDEN
+             "#F0E442",  # 0 | + (zero to positive) - yellow
+             "white",    # 0 | 0 (no edge in either) - HIDDEN
+             "#D55E00")  # 0 | - (zero to negative) - red-orange
+
+# Filter to show only visible (non-white) edges
+visible_edges <- edgeCol != "white"
+edgeCol_visible <- edgeCol[visible_edges]
+edge_labels <- c("+ → 0 (association lost)",
+                 "+ → − (association reversed)",
+                 "− → + (association reversed)",
+                 "0 → + (new positive association)",
+                 "0 → − (new negative association)")
+
+# Edge type legend - PNG
+png("plots/png/differential_edge_legend.png", 
+    width = 1500, height = 2000, res = 300)
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+legend("center",
+       title = "Edge Changes (Non-IgE → IgE)",
+       legend = edge_labels,
+       col = edgeCol_visible,
+       lty = 1,
+       lwd = 5,
+       cex = 1.8,
+       bty = "n",
+       title.cex = 2.0)
+
+dev.off()
+
+# Edge type legend - SVG
+svg("plots/svg/differential_edge_legend.svg", 
+    width = 5, height = 6.67)
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+legend("center",
+       title = "Edge Changes (Non-IgE → IgE)",
+       legend = edge_labels,
+       col = edgeCol_visible,
+       lty = 1,
+       lwd = 5,
+       cex = 1.8,
+       bty = "n",
+       title.cex = 2.0)
+
+dev.off()
+
+cat("Edge legend saved to PNG and SVG\n")
+
+# Phylum legend - PNG
+png("plots/png/phylum_legend.png", width = 1200, height = 2000, res = 300)
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+# Get phylum vector from one of the networks (use 'any' network)
+phylum_vector <- results$any$phylum_vector
+phyla_present <- sort(unique(phylum_vector))
+phyla_clean <- gsub("p__|;", "", phyla_present)
+colors_present <- phylcolors[phyla_present]
+
+legend("center",
+       title = "Bacterial Phyla",
+       legend = phyla_clean,
+       fill = colors_present,
+       cex = 2.0,
+       bty = "n",
+       title.cex = 2.5)
+
+dev.off()
+
+# Phylum legend - SVG
+svg("plots/svg/phylum_legend.svg", width = 4, height = 6.67)
+
+par(mar = c(1, 1, 2, 1))
+plot.new()
+
+legend("center",
+       title = "Bacterial Phyla",
+       legend = phyla_clean,
+       fill = colors_present,
+       cex = 2.0,
+       bty = "n",
+       title.cex = 2.5)
+
+dev.off()
+
+cat("Phylum legend saved to PNG and SVG\n")
+cat("\nLegend files saved:\n")
+cat("  PNG: plots/png/differential_edge_legend.png\n")
+cat("  SVG: plots/svg/differential_edge_legend.svg\n")
+cat("  PNG: plots/png/phylum_legend.png\n")
+cat("  SVG: plots/svg/phylum_legend.svg\n")
+```
+
