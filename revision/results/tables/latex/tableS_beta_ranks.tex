@@ -1,0 +1,34 @@
+\begin{table}[h!]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l l r r r r}
+\textbf{Rank (features)} & \textbf{Distance} & $\boldsymbol{R^2}$ \textbf{(\%)} & $\boldsymbol{p}$ & $\boldsymbol{p}$ \textbf{(extended)} & $\boldsymbol{p}$ \textbf{(dispersion)} \\
+\hline
+Family (45) & Bray--Curtis & 0.55 & 0.019 & 0.031 & 0.022 \\
+ & Aitchison & 0.47 & 0.006 & 0.015 & 0.193 \\
+ & Robust Aitchison & 0.82 & 0.015 & 0.034 & 0.004 \\
+ & Jaccard & 0.27 & 0.275 & 0.348 & 0.782 \\
+\hline
+Genus (112) & Bray--Curtis & 0.44 & 0.027 & 0.045 & 0.004 \\
+ & Aitchison & 0.35 & 0.023 & 0.039 & 0.112 \\
+ & Robust Aitchison & 0.20 & 0.443 & 0.554 & 0.010 \\
+ & Jaccard & 0.28 & 0.157 & 0.247 & 0.485 \\
+\hline
+Species (44) & Bray--Curtis & 0.39 & 0.033 & 0.053 & 0.175 \\
+ & Aitchison & 0.28 & 0.139 & 0.173 & 0.115 \\
+ & Robust Aitchison & 0.91 & 0.007 & 0.017 & 0.334 \\
+ & Jaccard & 0.24 & 0.389 & 0.461 & 0.680 \\
+\hline
+ASV (1459) & Bray--Curtis & 0.23 & 0.374 & 0.556 & 0.015 \\
+ & Aitchison & 0.22 & 0.486 & 0.611 & 0.077 \\
+ & Robust Aitchison & 0.12 & 0.624 & 0.710 & 0.216 \\
+ & Jaccard & 0.23 & 0.343 & 0.527 & 0.146 \\
+\hline
+ASV, phylog. (1459) & Unweighted UniFrac & 0.27 & 0.193 & -- & 0.092 \\
+ & Generalized UniFrac ($\alpha = 0.5$) & 0.35 & 0.053 & -- & 0.004 \\
+ & Weighted UniFrac & 0.39 & 0.106 & -- & 0.009 \\
+\hline
+\end{tabular}
+\caption{Association of IgE sensitization with gut microbial community composition across taxonomic ranks, comparing all sensitized individuals with their matched non-sensitized controls (221 pairs). PERMANOVA (5,000 permutations restricted within matched pairs, marginal tests) adjusted for sex, age and BMI; $R^2$ is the share of variation explained by IgE status. Extended: additionally adjusted for education, smoking, pack-years, alcohol intake, physical activity and proton-pump-inhibitor use. Dispersion: test of homogeneity of multivariate dispersion (betadisper); $p < 0.05$ indicates that a PERMANOVA difference may partly reflect spread rather than location. Features were filtered to 10\% prevalence at family, genus and species rank and to 1\% at ASV rank, so that the ASV rows of all distances use the same features as the phylogenetic (UniFrac) analysis.\label{tab:beta_ranks}}
+\end{table}

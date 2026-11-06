@@ -1,0 +1,133 @@
+{
+  "r": {
+    "LinDA": {
+      "version": "0.2.0",
+      "remote_ref": "HEAD",
+      "remote_sha": "af0f62fad83f25a0df272da9ccbec7db49149166"
+    },
+    "ANCOMBC": {
+      "version": "2.8.0",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "ALDEx2": {
+      "version": "1.38.0",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "SpiecEasi": {
+      "version": "1.1.1",
+      "remote_ref": "lowrank",
+      "remote_sha": "0d347382aab5af36b968a807881f7739745c2b5c"
+    },
+    "NetCoMi": {
+      "version": "1.2.0",
+      "remote_ref": "develop",
+      "remote_sha": "4598486d53f7d90629d7be136af9a2b1990d6523"
+    },
+    "pulsar": {
+      "version": "0.3.13",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "vegan": {
+      "version": "2.7.5",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "phyloseq": {
+      "version": "1.50.0",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "permApprox": {
+      "version": "1.0.2",
+      "remote_ref": "HEAD",
+      "remote_sha": "b306b85a8cf00dd1c6da5eeb7d3420d02e392a9b"
+    },
+    "GUniFrac": {
+      "version": "1.9",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "lmerTest": {
+      "version": "3.2.1",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "MicrobiomeStat": {
+      "version": "1.5.1",
+      "remote_ref": "HEAD",
+      "remote_sha": "11fb6e01f271c11bd8f6f1a97ad5a13908ab19a0"
+    },
+    "UpSetR": {
+      "version": "1.4.1",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "TreeSummarizedExperiment": {
+      "version": "2.14.0",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "limma": {
+      "version": "3.62.2",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "__R__": {
+      "version": "4.4.3",
+      "remote_ref": null,
+      "remote_sha": null
+    },
+    "__BIOC__": {
+      "version": "3.20",
+      "remote_ref": null,
+      "remote_sha": null
+    }
+  },
+  "python": {
+    "python": {
+      "version": "3.11.15"
+    },
+    "numpy": {
+      "version": "2.4.3"
+    },
+    "pandas": {
+      "version": "3.0.2"
+    },
+    "scipy": {
+      "version": "1.17.1"
+    },
+    "sklearn": {
+      "version": "1.8.0"
+    },
+    "statsmodels": {
+      "version": "0.14.6"
+    },
+    "matplotlib": {
+      "version": "3.10.8"
+    },
+    "seaborn": {
+      "version": "0.13.2"
+    },
+    "classo": {
+      "version": "1.0.11"
+    },
+    "gglasso": {
+      "version": "0.2.1"
+    },
+    "matplotlib_venn": {
+      "version": "1.1.2"
+    },
+    "PyYAML": {
+      "version": "6.0.3"
+    }
+  },
+  "taxsea_env": "",
+  "git": {
+    "branch": "revision-r1",
+    "sha": "5f5c5a562cc71fafbca2a01c35ec68792c67d0f4",
+    "dirty": true
+  }
+}

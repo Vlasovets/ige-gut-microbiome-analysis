@@ -1,0 +1,6 @@
+partition,taxon_i,taxon_j,asso_ige,asso_ctrl,p_perm,q_adaptBH,core_i,core_j
+any_ige,Faecalibacterium,Dorea,0.0082033925281466,0.0,0.0001999600079984,0.0177964407118576,True,True
+multiple,Faecalibacterium,Dorea,0.0059927091993769,0.0,0.0001999600079984,0.0177964407118576,True,True
+medium_score,Faecalibacterium,Dorea,0.0469257278998867,0.0,0.0003999200159968,0.0311937612477504,True,True
+low_score,Subdoligranulum,Ruminococcus,0.0042643367078512,0.0,0.0007998400319936,0.0323935212957408,True,True
+low_score,Fusicatenibacter,Dorea,0.134369181328395,0.0,0.0007998400319936,0.0323935212957408,True,True

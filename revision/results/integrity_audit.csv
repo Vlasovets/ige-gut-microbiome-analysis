@@ -1,0 +1,17 @@
+audit,item,published,recomputed,verdict
+TaxSEA,rows violating FDR>=p,4/5,must be 0,FAIL — mathematically impossible as published
+TaxSEA,"Spearman(p, FDR)",-1.000,+1.000,FAIL — FDR is anti-monotone in p
+TaxSEA,H1 BH(reported p) reproduces FDR,n/a,max|diff|=0.937,REJECTED
+TaxSEA,H2 rank order of BH(1-p) matches reported FDR,spearman=+0.975,order_match=False,SUPPORTED — consistent with a wrong-tail/complement error
+TaxSEA,H3 single consistent test count exists,n/a,no — implied n varies by row,REJECTED — p and FDR come from different runs
+TaxSEA,headline sets effect direction,text claims enrichment,Vitamin A=-0.013; Folic Acid=-0.013,FAIL — negative effects reported as enrichment
+DA,total tests (4 ranks x 3 prev x 15 partitions),not reported,"46,080",INFO — must be disclosed in Methods
+DA,"min q across partitions (family, prev10)",not computed,0.6073,PASS but null — nothing survives cross-partition BH
+DA,"min q across partitions (genus, prev10)",not computed,0.4170,PASS but null — nothing survives cross-partition BH
+DA,"min q across partitions (species, prev10)",not computed,0.2367,PASS but null — nothing survives cross-partition BH
+DA,"min q across partitions (asv, prev10)",not computed,0.9809,PASS but null — nothing survives cross-partition BH
+DA,significant ASVs,61,0 (min q = 0.1061),FAIL — published result not reproduced under adjustment
+DA,P. copri stable across prevalence thresholds,not reported,yes: q_within 0.021-0.025 at prev01/05/10,PASS — the one robust signal
+Table1,Asthma,39/6,39/6,PASS
+Table1,Dermatitis,29/12,29/12,PASS
+Table1,Hay fever,129/8,129/8,PASS

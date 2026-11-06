@@ -1,0 +1,16 @@
+method_a,method_b,n_common_evaluated,n_sig_a_in_common,n_sig_b_in_common,n_shared,n_union,jaccard
+ALDEx2,ANCOMBC2,21836,0,6880,0,6880,0.0
+ALDEx2,LinDA,41405,0,9,0,9,0.0
+ALDEx2,Wilcoxon_CLR_paired,41405,0,0,0,0,
+ALDEx2,ZicoSeq,29762,0,4,0,4,0.0
+ALDEx2,limma_voom,41405,0,1119,0,1119,0.0
+ANCOMBC2,LinDA,21836,6880,9,3,6886,0.00043566656985187334
+ANCOMBC2,Wilcoxon_CLR_paired,21836,6880,0,0,6880,0.0
+ANCOMBC2,ZicoSeq,21372,6506,4,2,6508,0.00030731407498463427
+ANCOMBC2,limma_voom,21836,6880,905,447,7338,0.06091578086672118
+LinDA,Wilcoxon_CLR_paired,46080,9,0,0,9,0.0
+LinDA,ZicoSeq,29762,9,4,0,13,0.0
+LinDA,limma_voom,46080,9,1119,3,1125,0.0026666666666666666
+Wilcoxon_CLR_paired,ZicoSeq,29762,0,4,0,4,0.0
+Wilcoxon_CLR_paired,limma_voom,46080,0,1119,0,1119,0.0
+ZicoSeq,limma_voom,29762,4,1055,0,1059,0.0

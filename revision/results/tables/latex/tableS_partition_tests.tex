@@ -1,0 +1,41 @@
+\begin{table}[h!]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l l r r r l}
+\multicolumn{6}{l}{\textbf{A. Single vs multiple} ($n = 47$ vs 228)} \\
+\textbf{Variable} & \textbf{Test} & \textbf{Statistic (df)} & $\boldsymbol{p}$ & $\boldsymbol{q}$ & \textbf{Effect size} \\
+\hline
+Age (years) & Wilcoxon rank-sum & 6180.50 & 0.097 & 0.292 & Cliff's $\delta$ = $+0.154$ \\
+BMI (kg/m$^2$) & Wilcoxon rank-sum & 5313.00 & 0.929 & 0.929 & Cliff's $\delta$ = $-0.008$ \\
+Sex & Pearson $\chi^2$ & 0.35 & 0.554 & 0.738 & Cram\'er's $V$ = $0.036$ \\
+Education & Pearson $\chi^2$ & 5.50 & 0.064 & 0.256 & Cram\'er's $V$ = $0.141$ \\
+Smoking & Pearson $\chi^2$ & 2.79 & 0.247 & 0.594 & Cram\'er's $V$ = $0.101$ \\
+Pack-years & Wilcoxon rank-sum & 5550.00 & 0.683 & 0.820 & Cliff's $\delta$ = $+0.036$ \\
+Alcohol (g/day) & Wilcoxon rank-sum & 5218.00 & 0.777 & 0.848 & Cliff's $\delta$ = $-0.026$ \\
+Physical activity & Pearson $\chi^2$ & 1.40 & 0.497 & 0.738 & Cram\'er's $V$ = $0.071$ \\
+PPI use & Fisher's exact & -- & 0.338 & 0.676 & Cram\'er's $V$ = $0.067$ \\
+Asthma & Pearson $\chi^2$ & 4.59 & 0.032 & 0.193 & Cram\'er's $V$ = $0.129$ \\
+Dermatitis & Fisher's exact & -- & 0.436 & 0.738 & Cram\'er's $V$ = $0.062$ \\
+Hay fever & Pearson $\chi^2$ & 33.56 & $6.9\times10^{-9}$ & \textbf{$8.3\times10^{-8}$} & Cram\'er's $V$ = $0.349$ \\
+\hline
+\\
+\multicolumn{6}{l}{\textbf{B. High vs medium vs low} ($n = 57$, 110, 108)} \\
+\textbf{Variable} & \textbf{Test} & \textbf{Statistic (df)} & $\boldsymbol{p}$ & $\boldsymbol{q}$ & \textbf{Effect size} \\
+\hline
+Age (years) & Kruskal--Wallis & 4.75 (2) & 0.093 & 0.372 & $\eta^2_H$ = $0.010$ \\
+BMI (kg/m$^2$) & Kruskal--Wallis & 0.71 (2) & 0.702 & 0.766 & $\eta^2_H$ = $-0.005$ \\
+Sex & Pearson $\chi^2$ & 3.01 (2) & 0.222 & 0.458 & Cram\'er's $V$ = $0.105$ \\
+Education & Pearson $\chi^2$ & 4.24 (4) & 0.375 & 0.643 & Cram\'er's $V$ = $0.088$ \\
+Smoking & Pearson $\chi^2$ & 1.50 (4) & 0.827 & 0.827 & Cram\'er's $V$ = $0.052$ \\
+Pack-years & Kruskal--Wallis & 0.73 (2) & 0.693 & 0.766 & $\eta^2_H$ = $-0.005$ \\
+Alcohol (g/day) & Kruskal--Wallis & 1.09 (2) & 0.580 & 0.766 & $\eta^2_H$ = $-0.003$ \\
+Physical activity & Pearson $\chi^2$ & 2.30 (4) & 0.681 & 0.766 & Cram\'er's $V$ = $0.065$ \\
+PPI use & Fisher's exact (MC) & -- & 0.127 & 0.382 & Cram\'er's $V$ = $0.124$ \\
+Asthma & Pearson $\chi^2$ & 9.96 (2) & 0.007 & \textbf{0.041} & Cram\'er's $V$ = $0.190$ \\
+Dermatitis & Pearson $\chi^2$ & 2.95 (2) & 0.229 & 0.458 & Cram\'er's $V$ = $0.104$ \\
+Hay fever & Pearson $\chi^2$ & 70.90 (2) & $4.0\times10^{-16}$ & \textbf{$4.8\times10^{-15}$} & Cram\'er's $V$ = $0.508$ \\
+\hline
+\end{tabular}
+\caption{Differences in baseline characteristics between IgE-burden partitions, tested within the two disjoint families (the partitions overlap, so no test across all six is valid). (A) Wilcoxon rank-sum test with Cliff's $\delta$ (single relative to multiple) for continuous variables; Pearson's $\chi^2$ test, or Fisher's exact test when an expected count was below 5, with Cram\'er's $V$ for categorical variables. (B) Kruskal--Wallis test with $\eta^2_H$; Pearson's $\chi^2$ test, or Fisher's exact test with a Monte Carlo $p$-value ($10^5$ replicates, fixed seed), with Cram\'er's $V$. $q$, Benjamini--Hochberg-adjusted across the 12 variables within each panel; bold, $q < 0.05$.\label{tab:partition_tests}}
+\end{table}

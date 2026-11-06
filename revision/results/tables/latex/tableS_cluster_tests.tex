@@ -1,0 +1,22 @@
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{l l r r r l}
+\textbf{Variable} & \textbf{Test} & \textbf{Statistic (df)} & $\boldsymbol{p}$ & $\boldsymbol{q}$ & \textbf{Effect size} \\
+\hline
+Age (years) & Kruskal--Wallis & 29.48 (8) & $2.6\times10^{-4}$ & \textbf{0.002} & $\eta^2_H$ = $0.081$ \\
+BMI (kg/m$^2$) & Kruskal--Wallis & 7.19 (8) & 0.517 & 0.609 & $\eta^2_H$ = $-0.003$ \\
+Sex & Fisher's exact (MC) & -- & 0.172 & 0.437 & Cram\'er's $V$ = $0.203$ \\
+Education & Fisher's exact (MC) & -- & 0.003 & \textbf{0.013} & Cram\'er's $V$ = $0.255$ \\
+Smoking & Fisher's exact (MC) & -- & 0.352 & 0.470 & Cram\'er's $V$ = $0.177$ \\
+Pack-years & Kruskal--Wallis & 11.19 (8) & 0.191 & 0.437 & $\eta^2_H$ = $0.012$ \\
+Alcohol (g/day) & Kruskal--Wallis & 10.14 (8) & 0.255 & 0.437 & $\eta^2_H$ = $0.008$ \\
+Physical activity & Fisher's exact (MC) & -- & 0.946 & 0.946 & Cram\'er's $V$ = $0.124$ \\
+PPI use & Fisher's exact (MC) & -- & 0.339 & 0.470 & Cram\'er's $V$ = $0.184$ \\
+Asthma & Fisher's exact (MC) & -- & 0.242 & 0.437 & Cram\'er's $V$ = $0.184$ \\
+Dermatitis & Fisher's exact (MC) & -- & 0.558 & 0.609 & Cram\'er's $V$ = $0.149$ \\
+Hay fever & Fisher's exact (MC) & -- & $1.0\times10^{-5}$ & \textbf{$1.2\times10^{-4}$} & Cram\'er's $V$ = $0.580$ \\
+\hline
+\end{tabular}
+\caption{Differences in baseline characteristics across the nine IgE clusters (A--I; $n = 275$). Kruskal--Wallis test for continuous variables, with $\eta^2_H = (H - k + 1)/(n - k)$ (values slightly below zero indicate no effect); Fisher's exact test with a Monte Carlo $p$-value ($10^5$ replicates, fixed seed) for categorical variables, with Cram\'er's $V$. $q$, Benjamini--Hochberg-adjusted across the 12 variables; bold, $q < 0.05$. Clusters A ($n = 12$) and F ($n = 10$) are underpowered.\label{tab:cluster_tests}}
+\end{table}

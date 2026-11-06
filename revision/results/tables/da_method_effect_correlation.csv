@@ -1,0 +1,16 @@
+method_a,method_b,spearman,n,pct_same_sign,estimand_a,estimand_b,same_estimand,independent_comparison
+ALDEx2,ANCOMBC2,0.18982008311529688,21762,57.12250712250713,CLR difference,log2FC absolute abundance,False,True
+ALDEx2,LinDA,0.9620831809161372,41405,92.66513706074146,CLR difference,log2FC relative abundance,False,True
+ALDEx2,Wilcoxon_CLR_paired,0.9870561145143497,41405,95.29283902910277,CLR difference,CLR difference,True,False
+ALDEx2,ZicoSeq,0.9907198877000933,29762,96.19649217122506,CLR difference,CLR difference,True,False
+ALDEx2,limma_voom,0.5954682981586333,41405,76.32653061224491,CLR difference,log2FC logCPM,False,True
+ANCOMBC2,LinDA,0.2307027782904304,21762,58.845694329565305,log2FC absolute abundance,log2FC relative abundance,False,True
+ANCOMBC2,Wilcoxon_CLR_paired,0.23570434342782254,21762,58.90083632019116,log2FC absolute abundance,CLR difference,False,True
+ANCOMBC2,ZicoSeq,0.23743623549225237,21314,58.89086985080228,log2FC absolute abundance,CLR difference,False,True
+ANCOMBC2,limma_voom,0.17361452586744947,21762,57.34307508501056,log2FC absolute abundance,log2FC logCPM,False,True
+LinDA,Wilcoxon_CLR_paired,0.9595181471163751,46080,91.57986111111111,log2FC relative abundance,CLR difference,False,True
+LinDA,ZicoSeq,0.9773086590193596,29762,94.68449700960957,log2FC relative abundance,CLR difference,False,True
+LinDA,limma_voom,0.6094947108197531,46080,73.93880208333333,log2FC relative abundance,log2FC logCPM,False,True
+Wilcoxon_CLR_paired,ZicoSeq,0.9999999999987481,29762,100.0,CLR difference,CLR difference,True,False
+Wilcoxon_CLR_paired,limma_voom,0.5935227217925124,46080,71.79470486111111,CLR difference,log2FC logCPM,False,True
+ZicoSeq,limma_voom,0.6253144525007147,29762,75.00167999462401,CLR difference,log2FC logCPM,False,True

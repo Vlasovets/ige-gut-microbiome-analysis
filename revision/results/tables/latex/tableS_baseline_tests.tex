@@ -1,0 +1,41 @@
+\begin{table}[h!]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l l r r r l}
+\multicolumn{6}{l}{\textbf{A. Full cohort} (275 IgE-positive vs 233 IgE-negative)} \\
+\textbf{Variable} & \textbf{Test} & \textbf{Statistic} & $\boldsymbol{p}$ & $\boldsymbol{q}$ & \textbf{Effect size [95\% CI]} \\
+\hline
+Age (years) & Wilcoxon & 29589.50 & 0.137 & 0.330 & Cliff's $\delta$ = $-0.076$ \\
+BMI (kg/m$^2$) & Wilcoxon & 30015.50 & 0.220 & 0.330 & Cliff's $\delta$ = $-0.063$ \\
+Sex & $\chi^2$ & 8.60 & 0.003 & \textbf{0.013} & RD(Female) = $-12.6$ pp [$-20.6$, $-4.2$] \\
+Education & $\chi^2$ & 3.35 & 0.187 & 0.330 & Cram\'er's $V$ = $0.081$ \\
+Smoking & $\chi^2$ & 3.17 & 0.204 & 0.330 & Cram\'er's $V$ = $0.079$ \\
+Pack-years & Wilcoxon & 30290.50 & 0.265 & 0.353 & Cliff's $\delta$ = $-0.055$ \\
+Alcohol (g/day) & Wilcoxon & 32990.50 & 0.560 & 0.614 & Cliff's $\delta$ = $+0.030$ \\
+Physical activity & $\chi^2$ & 1.15 & 0.563 & 0.614 & Cram\'er's $V$ = $0.048$ \\
+PPI use & $\chi^2$ & 0.00 & 0.985 & 0.985 & RD(Yes) = $+0.0$ pp [$-4.6$, $+4.5$] \\
+Asthma$^{\dagger}$ & $\chi^2$ & 21.05 & $4.5\times10^{-6}$ & \textbf{$2.7\times10^{-5}$} & RD(Yes) = $+11.6$ pp [$+6.9$, $+16.4$] \\
+Dermatitis$^{\dagger}$ & $\chi^2$ & 4.95 & 0.026 & 0.078 & RD(Yes) = $+5.4$ pp [$+0.6$, $+10.1$] \\
+Hay fever$^{\dagger}$ & $\chi^2$ & 121.05 & $3.7\times10^{-28}$ & \textbf{$4.5\times10^{-27}$} & RD(Yes) = $+43.5$ pp [$+36.8$, $+49.6$] \\
+\hline
+\\
+\multicolumn{6}{l}{\textbf{B. Matched cohort} (221 pairs; sex exact, age $\pm$5 y, BMI $\pm$4 kg/m$^2$)} \\
+\textbf{Variable} & \textbf{Test} & \textbf{Statistic} & $\boldsymbol{p}$ & $\boldsymbol{q}$ & \textbf{Effect size [95\% CI]} \\
+\hline
+Age (years) & Wilcoxon & 24025.50 & 0.769 & 0.848 & Cliff's $\delta$ = $-0.016$ \\
+BMI (kg/m$^2$) & Wilcoxon & 23182.50 & 0.357 & 0.612 & Cliff's $\delta$ = $-0.051$ \\
+Sex & $\chi^2$ & 0.00 & 1.000 & 1.000 & RD(Female) = $+0.0$ pp [$-8.6$, $+8.6$] \\
+Education & $\chi^2$ & 5.39 & 0.068 & 0.203 & Cram\'er's $V$ = $0.110$ \\
+Smoking & $\chi^2$ & 3.44 & 0.179 & 0.429 & Cram\'er's $V$ = $0.088$ \\
+Pack-years & Wilcoxon & 22870.00 & 0.222 & 0.444 & Cliff's $\delta$ = $-0.063$ \\
+Alcohol (g/day) & Wilcoxon & 24043.50 & 0.777 & 0.848 & Cliff's $\delta$ = $-0.015$ \\
+Physical activity & $\chi^2$ & 1.32 & 0.516 & 0.687 & Cram\'er's $V$ = $0.055$ \\
+PPI use & $\chi^2$ & 0.54 & 0.463 & 0.687 & RD(Yes) = $+1.8$ pp [$-3.2$, $+6.8$] \\
+Asthma$^{\dagger}$ & $\chi^2$ & 21.50 & $3.5\times10^{-6}$ & \textbf{$2.1\times10^{-5}$} & RD(Yes) = $+12.2$ pp [$+7.2$, $+17.6$] \\
+Dermatitis$^{\dagger}$ & $\chi^2$ & 5.64 & 0.018 & 0.070 & RD(Yes) = $+6.3$ pp [$+1.1$, $+11.8$] \\
+Hay fever$^{\dagger}$ & $\chi^2$ & 115.20 & $7.1\times10^{-27}$ & \textbf{$8.5\times10^{-26}$} & RD(Yes) = $+44.8$ pp [$+37.5$, $+51.6$] \\
+\hline
+\end{tabular}
+\caption{Formal comparison of baseline characteristics between IgE-positive and IgE-negative participants in the full cohort (A; descriptive statistics in Table~\ref{tab:stats}) and in the 1:1 matched cohort used for all microbiome analyses (B; descriptive statistics in Table~\ref{tab:matched_cohort}). Continuous variables: Wilcoxon rank-sum test with Cliff's $\delta$ (IgE-positive relative to IgE-negative). Categorical variables: Pearson's $\chi^2$ test (expected counts $\geq 5$ in every cell) with Cram\'er's $V$; for binary variables the effect is the risk difference (RD, percentage points, IgE-positive minus IgE-negative, for the level in brackets) with a Newcombe hybrid-score 95\% CI. $q$, Benjamini--Hochberg-adjusted within each panel; bold, $q < 0.05$. $^{\dagger}$Allergic-disease outcomes are downstream of sensitization and were therefore tested descriptively but never used as matching or adjustment variables. No dietary intake variable is available for this KORA FF4 subset.\label{tab:baseline_tests}}
+\end{table}

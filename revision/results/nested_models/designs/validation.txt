@@ -1,0 +1,16 @@
+controls: 233 (expect 233)
+any_ige: 275 (expect 275) OK
+single: 47 (expect 47) OK
+multiple: 228 (expect 228) OK
+high_score: 57 (expect 57) OK
+medium_score: 110 (expect 110) OK
+low_score: 108 (expect 108) OK
+cluster_A: 12
+cluster_B: 24
+cluster_C: 26
+cluster_D: 45
+cluster_E: 22
+cluster_F: 10
+cluster_G: 22
+cluster_H: 40
+cluster_I: 74

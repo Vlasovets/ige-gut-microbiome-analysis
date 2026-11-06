@@ -1,0 +1,132 @@
+  input grid complete and settled: 180 extended + 45 ASV files
+=== Six-method DA overlap ===
+  methods : ALDEx2, ANCOMBC2, LinDA, Wilcoxon_CLR_paired, ZicoSeq, limma_voom
+  tests   : 231,243
+  levels  : ['asv', 'family', 'genus', 'species']
+  analyses: 180
+
+  method                    tests     sig       %      min q
+  ALDEx2                   41,405       0   0.00%     0.0822
+  ANCOMBC2                 21,836   6,880  31.51%    5.8e-19
+  LinDA                    46,080       9   0.02%      0.021
+  Wilcoxon_CLR_paired      46,080       0   0.00%     0.0538
+  ZicoSeq                  29,762       4   0.01%     0.0272
+  limma_voom               46,080   1,119   2.43%   1.75e-48
+
+  === Feature coverage (how much each method actually tested) ===
+    ALDEx2                 evaluated  41,405 of 46,080 taxon-analyses ( 89.9%)
+    ANCOMBC2               evaluated  21,836 of 46,080 taxon-analyses ( 47.4%)
+    LinDA                  evaluated  46,080 of 46,080 taxon-analyses (100.0%)
+    Wilcoxon_CLR_paired    evaluated  46,080 of 46,080 taxon-analyses (100.0%)
+    ZicoSeq                evaluated  29,762 of 46,080 taxon-analyses ( 64.6%)
+    limma_voom             evaluated  46,080 of 46,080 taxon-analyses (100.0%)
+
+  === Pairwise overlap of significant calls (q_within < 0.05) ===
+      restricted to taxon-analyses BOTH methods evaluated
+    ALDEx2                 & ANCOMBC2                shared    0 of 6880 (Jaccard 0.000)   common features 21,836
+    ALDEx2                 & LinDA                   shared    0 of    9 (Jaccard 0.000)   common features 41,405
+    ALDEx2                 & ZicoSeq                 shared    0 of    4 (Jaccard 0.000)   common features 29,762
+    ALDEx2                 & limma_voom              shared    0 of 1119 (Jaccard 0.000)   common features 41,405
+    ANCOMBC2               & LinDA                   shared    3 of 6886 (Jaccard 0.000)   common features 21,836
+    ANCOMBC2               & Wilcoxon_CLR_paired     shared    0 of 6880 (Jaccard 0.000)   common features 21,836
+    ANCOMBC2               & ZicoSeq                 shared    2 of 6508 (Jaccard 0.000)   common features 21,372
+    ANCOMBC2               & limma_voom              shared  447 of 7338 (Jaccard 0.061)   common features 21,836
+    LinDA                  & Wilcoxon_CLR_paired     shared    0 of    9 (Jaccard 0.000)   common features 46,080
+    LinDA                  & ZicoSeq                 shared    0 of   13 (Jaccard 0.000)   common features 29,762
+    LinDA                  & limma_voom              shared    3 of 1125 (Jaccard 0.003)   common features 46,080
+    Wilcoxon_CLR_paired    & ZicoSeq                 shared    0 of    4 (Jaccard 0.000)   common features 29,762
+    Wilcoxon_CLR_paired    & limma_voom              shared    0 of 1119 (Jaccard 0.000)   common features 46,080
+    ZicoSeq                & limma_voom              shared    0 of 1059 (Jaccard 0.000)   common features 29,762
+
+  === Taxon-analyses called by >=1 method: 7,558 ===
+n_methods
+3       1
+2     452
+1    7105
+
+  === CONSENSUS (>=2 of 6 methods): 453 ===
+  level prevalence partition                            taxon  n_methods  n_tested                   methods methods_not_tested  n_logratio  n_count
+species     prev10   any_ige                 Prevotella_copri          3         6 ANCOMBC2,LinDA,limma_voom                              2        1
+    asv     prev01   any_ige 05d757dba88ddd1e1e4e9974857a2b09          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 0d89c7f97685c1a34a36f86096c43246          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 155ace0850fc88498e3c881bc5252fcc          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 15ceb00ebfbfe7d69e79f08436f255f9          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 18f557ed1fb6026bb8a6398984d19dd4          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 19ff2a801156e1930f697799d400fa95          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 1f2dda5d2f361fc8d646e55a515ae1e4          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 26639d9f66c6c2106996b1c162605ff8          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 2dbb2410d57cf07b9448d6dc0d5cf236          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 2ee585c245a593473acb21bdf1d7a460          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 317c294f3f66c0443f743165841fce56          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 37020b47521b3745084f867b8c1f7bc3          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 38b7580c13cf081c9f279006c2dc70b9          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 3a893286e7a8c6965a9be85b7ec43c60          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 3fd0c1aebeadfd9c4f8a66a6680b310f          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 409f711b59152d57926cf444c5577087          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 414ea75fb1462d10153c7bed625b4b99          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 433d1758d4b53bad06cf0a8796ce3263          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 44cae38ace30f54ee81cc5c5b2ce47eb          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 463ccc4044935acfa08235ade550557e          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 47d74904a190fe918c6eea86295320d2          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 494e65560668c776b1b9e745b349c50d          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 4a5d2a184f229de74e17565e4c13a7d9          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 4f9106b58ba967a459b11a9d6f9ca4e0          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 53f976e60f93b527ffa62fbe48254d53          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 544bdbfbed9a11965f1b4457b4c00d1c          2         5       ANCOMBC2,limma_voom            ZicoSeq           1        1
+    asv     prev01   any_ige 557156f08d4eab8818ea1914d5f83ed0          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 582fae36f33acd1efdcaf7cacf00ef0a          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 60bed339f40d58c6de65c2b894d2132e          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 62c336937d9c98f93521f014e1f21a63          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 64cd0cec44c7015ce37e278c8c8a558c          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 6b6d13f1332283e053c18c3b7774b85c          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 6bea7adf118ca77f31985d2caecd0cff          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 6d88e732578bfda8c3afd4050222d185          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 6e20979e3b8626cbb61b64fac8dc2f0c          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 707940842caa2afe60491008e04a8173          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 747a284c95e1af0ec02d6582f6565774          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 75a7dd04040e23328468b763836841ac          2         6       ANCOMBC2,limma_voom                              1        1
+    asv     prev01   any_ige 77087c966bd1f46d43d2c4913475bc98          2         6       ANCOMBC2,limma_voom                              1        1
+
+  === Consensus by taxonomic rank ===
+    family   any-method   221   >=2 methods    3   >=3 methods    0
+    genus    any-method   832   >=2 methods   11   >=3 methods    0
+    species  any-method   719   >=2 methods   62   >=3 methods    1
+    asv      any-method  5786   >=2 methods  377   >=3 methods    0
+
+  === Effect-size rank correlation (Spearman, complete cases) ===
+      'same estimand' pairs agree partly BY CONSTRUCTION - see note below
+    ALDEx2                 & ANCOMBC2                rho +0.190  n=21,762  same-sign  57.1%
+    ALDEx2                 & LinDA                   rho +0.962  n=41,405  same-sign  92.7%
+    ALDEx2                 & Wilcoxon_CLR_paired     rho +0.987  n=41,405  same-sign  95.3%  [SAME ESTIMAND - not independent]
+    ALDEx2                 & ZicoSeq                 rho +0.991  n=29,762  same-sign  96.2%  [SAME ESTIMAND - not independent]
+    ALDEx2                 & limma_voom              rho +0.595  n=41,405  same-sign  76.3%
+    ANCOMBC2               & LinDA                   rho +0.231  n=21,762  same-sign  58.8%
+    ANCOMBC2               & Wilcoxon_CLR_paired     rho +0.236  n=21,762  same-sign  58.9%
+    ANCOMBC2               & ZicoSeq                 rho +0.237  n=21,314  same-sign  58.9%
+    ANCOMBC2               & limma_voom              rho +0.174  n=21,762  same-sign  57.3%
+    LinDA                  & Wilcoxon_CLR_paired     rho +0.960  n=46,080  same-sign  91.6%
+    LinDA                  & ZicoSeq                 rho +0.977  n=29,762  same-sign  94.7%
+    LinDA                  & limma_voom              rho +0.609  n=46,080  same-sign  73.9%
+    Wilcoxon_CLR_paired    & ZicoSeq                 rho +1.000  n=29,762  same-sign 100.0%  [SAME ESTIMAND - not independent]
+    Wilcoxon_CLR_paired    & limma_voom              rho +0.594  n=46,080  same-sign  71.8%
+    ZicoSeq                & limma_voom              rho +0.625  n=29,762  same-sign  75.0%
+
+    Independent comparisons only (different estimands):
+      LinDA                  & ZicoSeq                 rho +0.977  same-sign  94.7%
+      ALDEx2                 & LinDA                   rho +0.962  same-sign  92.7%
+      LinDA                  & Wilcoxon_CLR_paired     rho +0.960  same-sign  91.6%
+      ZicoSeq                & limma_voom              rho +0.625  same-sign  75.0%
+      LinDA                  & limma_voom              rho +0.609  same-sign  73.9%
+      ALDEx2                 & limma_voom              rho +0.595  same-sign  76.3%
+      Wilcoxon_CLR_paired    & limma_voom              rho +0.594  same-sign  71.8%
+      ANCOMBC2               & ZicoSeq                 rho +0.237  same-sign  58.9%
+      ANCOMBC2               & Wilcoxon_CLR_paired     rho +0.236  same-sign  58.9%
+      ANCOMBC2               & LinDA                   rho +0.231  same-sign  58.8%
+      ALDEx2                 & ANCOMBC2                rho +0.190  same-sign  57.1%
+      ANCOMBC2               & limma_voom              rho +0.174  same-sign  57.3%
+
+Wrote /ictstr01/home/itg/oleg.vlasovets/slr_example/ige-gut-microbiome-analysis/revision/results/tables/da_method_rates.csv
+Wrote /ictstr01/home/itg/oleg.vlasovets/slr_example/ige-gut-microbiome-analysis/revision/results/tables/da_method_overlap_pairwise.csv
+Wrote /ictstr01/home/itg/oleg.vlasovets/slr_example/ige-gut-microbiome-analysis/revision/results/tables/da_method_upset.csv
+Wrote /ictstr01/home/itg/oleg.vlasovets/slr_example/ige-gut-microbiome-analysis/revision/results/tables/da_method_effect_correlation.csv
+Wrote /ictstr01/home/itg/oleg.vlasovets/slr_example/ige-gut-microbiome-analysis/revision/results/tables/da_all_methods_long.csv

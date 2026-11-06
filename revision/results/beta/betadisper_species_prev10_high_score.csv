@@ -1,0 +1,5 @@
+"level","prevalence","partition","distance","F_stat","p_value","mean_dist_non_ige","mean_dist_ige","interpretation"
+"species","prev10","high_score","bray",0.311269746163462,0.586482703459308,0.573951284356566,0.582041573824936,"equal dispersion - PERMANOVA interpretable as a location shift"
+"species","prev10","high_score","jaccard",0.454493752082487,0.533093381323735,0.51184097711135,0.521224609181013,"equal dispersion - PERMANOVA interpretable as a location shift"
+"species","prev10","high_score","aitchison_pseudo",0.44583701085218,0.485302939412118,11.8495474182839,11.6333686408139,"equal dispersion - PERMANOVA interpretable as a location shift"
+"species","prev10","high_score","aitchison_robust",0.181666643350278,0.688462307538492,3.72065378063527,3.58429465561948,"equal dispersion - PERMANOVA interpretable as a location shift"

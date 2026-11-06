@@ -1,0 +1,16 @@
+"model","partition","n_asv","n_case","n_ctrl","n_hits","seed"
+"M1","any_ige",6958,275,233,0,NA
+"M1","cluster_A",4794,12,233,155,NA
+"M1","cluster_B",4939,24,233,282,NA
+"M1","cluster_C",4938,26,233,279,NA
+"M1","cluster_D",5143,45,233,3,NA
+"M1","cluster_E",4879,22,233,211,NA
+"M1","cluster_F",4720,10,233,64,NA
+"M1","cluster_G",4896,22,233,236,NA
+"M1","cluster_H",5075,40,233,4,NA
+"M1","cluster_I",5400,74,233,0,NA
+"M1","high_score",5229,57,233,0,NA
+"M1","low_score",5680,108,233,0,NA
+"M1","medium_score",5675,110,233,0,NA
+"M1","multiple",6597,228,233,0,NA
+"M1","single",5161,47,233,1,NA

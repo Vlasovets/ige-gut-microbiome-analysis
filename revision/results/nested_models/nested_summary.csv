@@ -1,0 +1,5 @@
+model,design,n_union_hits,n_union_hits_iqr,n_hits_prev_ge1pct,prev_ge1pct_iqr
+M0,"published: per-partition down-sampled controls (seed median), unadjusted",58.5,"[48, 75]",12.0,"[7, 16]"
+M1,"all 233 controls in every partition, unadjusted",1128.0,,74.0,
+M2,"matched pairs (sex exact, age ±5, BMI ±4), unadjusted",66.0,,11.0,
+M3,matched pairs + sex/age/BMI in the model,110.0,,15.0,

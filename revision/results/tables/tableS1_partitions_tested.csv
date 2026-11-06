@@ -1,0 +1,25 @@
+"family","variable","column","type","test","statistic","df","p_value","effect_name","effect_size","q_BH"
+"single_vs_multiple","Age (years)","u3talter","cont","Wilcoxon rank-sum",6180.5,NA,0.0974083820489477,"Cliff's delta",0.153508771929824,0.292225146146843
+"single_vs_multiple","BMI (kg/m2)","u3tbmi","cont","Wilcoxon rank-sum",5313,NA,0.928576686689021,"Cliff's delta",-0.00839865621500557,0.928576686689021
+"single_vs_multiple","Sex","u3csex","cat","Chi-squared",0.350632614172464,NA,0.553755240828281,"Cramer's V",0.035707529848757,0.738340321104375
+"single_vs_multiple","Education","u3tschul","cat","Chi-squared",5.49597566523317,NA,0.0640566242668894,"Cramer's V",0.141369607962226,0.256226497067558
+"single_vs_multiple","Smoking","u3tcigreg_sf","cat","Chi-squared",2.79411500031418,NA,0.247323644073035,"Cramer's V",0.100798899711062,0.593576745775283
+"single_vs_multiple","Pack-years","u3tpyrs","cont","Wilcoxon rank-sum",5550,NA,0.683359749835419,"Cliff's delta",0.0358342665173572,0.820031699802503
+"single_vs_multiple","Alcohol (g/day)","u3talkkon","cont","Wilcoxon rank-sum",5218,NA,0.777008616713698,"Cliff's delta",-0.0261291526689064,0.84764576368767
+"single_vs_multiple","Physical activity","u3tphact","cat","Chi-squared",1.39679542119844,NA,0.497381614950355,"Cramer's V",0.0712688997886543,0.738340321104375
+"single_vs_multiple","PPI use","u3tmppi","cat","Fisher's exact",NA,NA,0.337921825937397,"Cramer's V",0.0667627016371813,0.675843651874793
+"single_vs_multiple","Asthma","u3da13aa","cat","Chi-squared",4.58961960117961,NA,0.0321661524253478,"Cramer's V",0.129187947667231,0.192996914552087
+"single_vs_multiple","Dermatitis","u3da4aa","cat","Fisher's exact",NA,NA,0.43581511890001,"Cramer's V",0.06153176471185,0.738340321104375
+"single_vs_multiple","Hay fever","u3da8aa","cat","Chi-squared",33.5618562719816,NA,6.9033292638095e-09,"Cramer's V",0.349346695585198,8.2839951165714e-08
+"high_vs_medium_vs_low","Age (years)","u3talter","cont","Kruskal-Wallis",4.74968552454431,2,0.0930291157474954,"eta-squared",0.0101091379578835,0.372116462989982
+"high_vs_medium_vs_low","BMI (kg/m2)","u3tbmi","cont","Kruskal-Wallis",0.708383443670794,2,0.70174041549711,"eta-squared",-0.00474859028062208,0.76553499872412
+"high_vs_medium_vs_low","Sex","u3csex","cat","Chi-squared",3.00992311482458,2,0.222025828915295,"Cramer's V",0.104619190223393,0.458194828728312
+"high_vs_medium_vs_low","Education","u3tschul","cat","Chi-squared",4.23601438379504,4,0.375006051919232,"Cramer's V",0.087760152313979,0.642867517575827
+"high_vs_medium_vs_low","Smoking","u3tcigreg_sf","cat","Chi-squared",1.49721592008015,4,0.827134517451488,"Cramer's V",0.0521748096669464,0.827134517451488
+"high_vs_medium_vs_low","Pack-years","u3tpyrs","cont","Kruskal-Wallis",0.732914565954565,2,0.693185746681409,"eta-squared",-0.00465840233104939,0.76553499872412
+"high_vs_medium_vs_low","Alcohol (g/day)","u3talkkon","cont","Kruskal-Wallis",1.08942546788921,2,0.58000837612878,"eta-squared",-0.00334770048570142,0.76553499872412
+"high_vs_medium_vs_low","Physical activity","u3tphact","cat","Chi-squared",2.30142177510598,4,0.68051020907337,"Cramer's V",0.0646869633501637,0.76553499872412
+"high_vs_medium_vs_low","PPI use","u3tmppi","cat","Fisher's exact (simulated)",NA,NA,0.127428725712743,"Cramer's V",0.123699163248404,0.382286177138229
+"high_vs_medium_vs_low","Asthma","u3da13aa","cat","Chi-squared",9.95773433747341,2,0.00688185412289843,"Cramer's V",0.190289103853473,0.0412911247373906
+"high_vs_medium_vs_low","Dermatitis","u3da4aa","cat","Chi-squared",2.94721595128837,2,0.229097414364156,"Cramer's V",0.103523663544988,0.458194828728312
+"high_vs_medium_vs_low","Hay fever","u3da8aa","cat","Chi-squared",70.895010884053,2,4.0303613859787e-16,"Cramer's V",0.507740129966476,4.83643366317444e-15

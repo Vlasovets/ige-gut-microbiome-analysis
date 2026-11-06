@@ -1,0 +1,103 @@
+# Configuration for the iScience revision (ISCIENCE-D-26-05498)
+# Single source of truth for paths, scope and parameters.
+# Nothing in this file may be overridden inside an analysis script.
+
+paths:
+  # Raw inputs. Read-only.
+  kora_data: /home/itg/oleg.vlasovets/slr_example/KORA_data
+  # Already-computed matched/adjusted results. READ-ONLY INPUT ARCHIVE.
+  # This directory is NOT under version control and is the provenance of the
+  # numbers the revision reports. Never write into it.
+  pipeline_results: /home/itg/oleg.vlasovets/slr_example/IGE_Causal_Pipeline/results
+  pipeline_analysis: /home/itg/oleg.vlasovets/slr_example/IGE_Causal_Pipeline/analysis
+  # Source of the vendored utils package (CLR + pair matching implementations).
+  utils_source: /home/itg/oleg.vlasovets/slr_example/Causal_Sparse_Low_Rank_Microbiome_Tutorial/utils
+  # Extra R library for revision-only packages, so slr-env is never mutated.
+  # conda create --clone DEADLOCKS on this cluster - do not use it.
+  r_libs: revision/env/rlibs
+
+scope:
+  levels: [family, genus, species, asv]
+  prevalence: [prev10, prev05, prev01]
+  partitions:
+    burden: [any_ige, single, multiple, high_score, medium_score, low_score]
+    clusters: [cluster_A, cluster_B, cluster_C, cluster_D, cluster_E,
+               cluster_F, cluster_G, cluster_H, cluster_I]
+
+# Pre-specified analysis scope. This MUST be fixed before results are inspected.
+# Rationale: BH across all 15 partitions gives a minimum q of 0.2367 (species),
+# 0.4170 (genus), 0.6073 (family), 0.9809 (ASV) - i.e. nothing survives. Without
+# a declared primary contrast there is no reportable positive finding.
+prespecified:
+  primary:
+    partition: any_ige
+    level: species        # the rank at which the one robust signal lives
+    prevalence: prev05    # midpoint; signal is stable at prev10/05/01
+    alpha: 0.05
+    fdr_within: BH
+  secondary:
+    # BH within level x prevalence across the 6 burden partitions
+    partitions: [any_ige, single, multiple, high_score, medium_score, low_score]
+    levels: [family, genus, species]
+    prevalence: [prev10]
+  exploratory:
+    # Reported as hypothesis-generating, NOT FDR-controlled across partitions
+    note: "9 IgE clusters; the prev05/prev01 and ASV sensitivity grid"
+
+# Every results table carries all three q columns.
+multiplicity_columns: [q_within, q_secondary, q_all_partitions]
+
+matching:
+  # As implemented in IGE_Causal_Pipeline/analysis/00a_match_pairs.py
+  sex: exact
+  age_years: 5
+  bmi: 4
+  ratio: "1:1"
+  n_pairs_any_ige: 221
+
+ige_definition:
+  # What the CODE implements and what reproduces the published 275/233 split.
+  implemented: "any non-zero value (>= 0.07 ISU-E, the assay reporting floor)"
+  implemented_n: {sensitized: 275, non_sensitized: 233}
+  # What the Methods CLAIM. Applying it inverts the groups.
+  manuscript_claim: ">= 0.3 ISU"
+  manuscript_claim_n: {sensitized: 231, non_sensitized: 277}
+  # Pre-registered sensitivity analyses. Require full re-matching.
+  sensitivity_thresholds: [0.3, 0.35]
+  n_allergen_components: 104   # NOT 112; 112 is the ISAC platform count
+  ccd_marker: bromelain        # 57 positive; only 1 sensitized solely via it
+
+statistics:
+  seed: 42
+  n_perm_permanova: 5000
+  n_perm_diffnet: 1000
+  # by="margin" (type III) is PRIMARY. The published analysis used by="terms"
+  # with ige_status entered first, the most favourable ordering.
+  adonis_by: [margin, terms]
+  distances: [bray, jaccard, aitchison, robust_aitchison]
+  # Excluded from adjustment as COLLIDERS downstream of sensitization.
+  collider_exclude: [u3da13aa, u3da4aa, u3da8aa]   # asthma, dermatitis, hay fever
+
+covariates:
+  # Verified present in kora.csv with ZERO missingness in the matched any_ige set.
+  base:     [u3csex, u3talter, u3tbmi]
+  extended: [u3tschul, u3tcigreg_sf, u3tpyrs, u3talkkon, u3tphact]
+  medication: [u3tmppi]      # proton-pump inhibitors: major microbiome confounder
+  # NO DIET VARIABLE EXISTS. u3su_d3* is a self-reported intolerance/allergy
+  # questionnaire (free text: "Lactose", "Gluten", "Penicillin"), not intake.
+  # -999 is a skip-logic sentinel. Do not build a diet index from it.
+  diet: null
+
+networks:
+  level: genus
+  prevalence: prev10
+  top_n: 50
+  # Rank by mean of WITHIN-SAMPLE proportions, not colSums/total (which is
+  # dominated by high-depth samples).
+  abundance_metric: mean_within_sample_proportion
+  robustness_top_n: [30, 75]
+  # Edge count is monotone in n at fixed p (6 @ n=23 ... 50 @ n=221), so
+  # cluster-level networks are sample-size artifacts. Restrict inference.
+  inference_partitions: [any_ige, multiple, medium_score, low_score, cluster_I]
+  exploratory_partitions: [cluster_B, cluster_E]
+  logfile: null   # netConstruct defaults to "log.txt"; array tasks would race

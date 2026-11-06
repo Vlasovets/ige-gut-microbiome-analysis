@@ -1,0 +1,105 @@
+component,category,source
+red_meat,Food,Beef
+codfish_parvalbumin,Food,Cod
+egg_ovomucoid,Food,Hen egg
+egg_ovalbumin,Food,Hen egg
+egg_conalbumin,Food,Hen egg
+egg_livetin,Food,Hen egg
+cow_milk_alpha_lactalbumin,Food,Cow milk
+cow_milk_beta_lactalbumin,Food,Cow milk
+cow_milk_casein,Food,Cow milk
+cow_milk_transferin,Food,Cow milk
+shrimp_parvalbumin,Food,Shrimp
+shrimp_arginin_kinase,Food,Shrimp
+shrimp_sarco_calcium,Food,Shrimp
+hazel_nut_pr10,Food,Hazelnut
+hazel_nut_lipid_,Food,Hazelnut
+hazel_nut_storage,Food,Hazelnut
+hazel_nut_a14,Food,Hazelnut
+walnut_2s_albumin,Food,Walnut
+walnut_lipid,Food,Walnut
+peanut_7s_globulin,Food,Peanut
+peanut_2s_albumin_storage,Food,Peanut
+peanut_11s_globulin,Food,Peanut
+peanut_2s_albumin_saver,Food,Peanut
+peanut_pr10,Food,Peanut
+peanut_lipid,Food,Peanut
+sesame_nut_2s_albumin,Food,Sesame
+cashew_nut_o2,Food,Cashew
+cashew_nut_o3,Food,Cashew
+brazil_nut_2s_albumin,Food,Brazil nut
+soy_bean_pr10,Food,Soy
+soy_bean_7s_globulin,Food,Soy
+soy_bean_11s_globulin,Food,Soy
+wheat_lipid,Food,Wheat
+wheat_omega5_gliadin,Food,Wheat
+wheat_alpha_amylase,Food,Wheat
+kiwi_cystein_protease,Food,Kiwi
+kiwi_thaumatin,Food,Kiwi
+kiwi_kiwelin,Food,Kiwi
+kiwi_pr10,Food,Kiwi
+peach_pr10,Food,Peach
+peach_lipid,Food,Peach
+apple_pr10,Food,Apple
+celery_pr10,Food,Celery
+cat_d1,Animal dander,Cat
+cat_d2,Animal dander,Cat
+cat_d4,Animal dander,Cat
+storage_mite,Storage mite,Storage mite
+german_cockroach_g1,Insect,German cockroach
+german_cockroach_g5,Insect,German cockroach
+german_cockroach_g7,Insect,German cockroach
+herring_worm,Parasite,Anisakis simplex
+latex_b1,Latex,Latex
+latex_b6,Latex,Latex
+latex_b8,Latex,Latex
+bromelain,CCD marker (not an allergen),Bromelain (MUXF3)
+mouse,Animal dander,Mouse
+mould_alt_a1,Mould,Mould
+mould_alt_a6,Mould,Mould
+mould_asp_f1,Mould,Mould
+mould_asp_f3,Mould,Mould
+mould_asp_f6,Mould,Mould
+mould_cla,Mould,Mould
+dust_mite_blo,House dust mite,House dust mite
+dust_mite_far_1,House dust mite,House dust mite
+dust_mite_far_2,House dust mite,House dust mite
+dust_mite_pter_p1,House dust mite,House dust mite
+dust_mite_pter_p2,House dust mite,House dust mite
+dust_mite_pter_p10,House dust mite,House dust mite
+dust_mite_pter_p23,House dust mite,House dust mite
+sycamore_tree_a1,Tree pollen,Sycamore
+sycamore_tree_a3,Tree pollen,Sycamore
+common_ragweed,Weed pollen,Ragweed
+mug_wort_v1,Weed pollen,Mugwort
+mug_wort_v3,Weed pollen,Mugwort
+white_goose_foot,Weed pollen,Goosefoot
+annual_mercury,Weed pollen,Annual mercury
+english_platain,Weed pollen,English plantain
+prickly_saltwort,Weed pollen,Prickly saltwort
+dog_f1,Animal dander,Dog
+dog_f2,Animal dander,Dog
+dog_f3,Animal dander,Dog
+dog_f4,Animal dander,Dog
+dog_f5,Animal dander,Dog
+dog_f6,Animal dander,Dog
+horse_c1,Animal dander,Horse
+horse_c3,Animal dander,Horse
+olive_tree_e1,Tree pollen,Olive
+olive_tree_e7,Tree pollen,Olive
+olive_tree_e9,Tree pollen,Olive
+arizona_cypress,Tree pollen,Arizona cypress
+jpn_red_cedar,Tree pollen,Japanese red cedar
+birch_v1,Tree pollen,Birch
+birch_v2,Tree pollen,Birch
+birch_v4,Tree pollen,Birch
+timothy_grass_p1,Grass pollen,Timothy grass
+timothy_grass_p2,Grass pollen,Timothy grass
+timothy_grass_p4,Grass pollen,Timothy grass
+timothy_grass_p5,Grass pollen,Timothy grass
+timothy_grass_p6,Grass pollen,Timothy grass
+timothy_grass_p7,Grass pollen,Timothy grass
+timothy_grass_p11,Grass pollen,Timothy grass
+timothy_grass_p12,Grass pollen,Timothy grass
+bermuda_grass,Grass pollen,Bermuda grass
+alder,Tree pollen,Alder

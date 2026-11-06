@@ -1,0 +1,11 @@
+numpy==1.26.4
+packaging==26.3
+pandas==2.2.3
+patsy==1.0.3
+python-dateutil==2.9.0.post0
+pytz==2026.4
+PyYAML==6.0.3
+scipy==1.17.1
+six==1.17.0
+statsmodels==0.14.6
+tzdata==2026.4

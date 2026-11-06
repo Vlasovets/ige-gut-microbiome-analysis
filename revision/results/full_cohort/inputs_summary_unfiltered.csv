@@ -1,0 +1,5 @@
+level,prevalence,partition,n_features,n_ige,n_ctrl
+family,prev00,any_ige,89,275,233
+genus,prev00,any_ige,263,275,233
+species,prev00,any_ige,233,275,233
+asv,prev00,any_ige,6958,275,233

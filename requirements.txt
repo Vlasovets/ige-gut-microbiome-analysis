@@ -1,16 +1,43 @@
-jupyterlab-plotly
-scipy
-scikit-learn
-kaleido
-networkx
-matplotlib
-igraph
-seaborn
-bokeh
-pyvis
-ipywidgets
-selenium
-colorlover
+# Python dependencies for this repository.
+#
+# The submitted version of this file was not installable into a working state:
+# it pinned numpy==1.22.4, and omitted pandas, c-lasso (the classifier the
+# manuscript actually uses), rpy2, scikit-bio, plotly, tqdm and PyYAML, while
+# listing several packages nothing imports.
+#
+# Versions below are those the revision analyses were run with. For an exact
+# environment use revision/env/slr-env.yml; revision/env/versions.json records
+# what was captured at run time, including git SHAs for non-release packages.
+
+# Core
+numpy==2.4.3
+pandas==3.0.2
+scipy==1.17.1
+statsmodels==0.14.6
+PyYAML==6.0.3
+
+# Modelling
+scikit-learn==1.8.0
+c-lasso==1.0.11          # log-contrast classification (notebook 04); was omitted
+gglasso==0.2.1           # used by utils/solver.py only
+
+# Microbiome
+scikit-bio               # alpha diversity (notebook 02); was omitted
+
+# R bridge
+rpy2==3.5.6              # LinDA via R (notebook 03); was omitted
+
+# Plotting
+matplotlib==3.10.8
+seaborn==0.13.2
+matplotlib-venn==1.1.2
+plotly                   # notebooks 01/03/04; only the JupyterLab ext was listed
+kaleido                  # static export for plotly
+python-igraph            # utils/pair_matching.py
+networkx                 # utils/heatmap.py, utils/plotting.py
 fastcluster
-gglasso
-numpy==1.22.4
+
+# Notebooks
+jupyterlab
+ipywidgets
+tqdm
