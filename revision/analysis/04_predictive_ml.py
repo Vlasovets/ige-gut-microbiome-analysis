@@ -30,6 +30,9 @@ balance, and is the same exchangeability used for PERMANOVA and the network test
 Usage:
   python revision/analysis/04_predictive_ml.py \
     --level genus --prevalence prev10 --partition any_ige
+  # sparse log-contrast (c-lasso) models only, same folds, writes *_classo_*:
+  revision/env/classo-venv/bin/python revision/analysis/04_predictive_ml.py \
+    --level genus --prevalence prev10 --partition any_ige --classo
 """
 
 from __future__ import annotations
@@ -182,6 +185,125 @@ def evaluate(X, y, groups, seed_list, n_splits=5,
     return pd.DataFrame(rows), roc_store
 
 
+# ── Sparse log-contrast classification (c-lasso), the main-paper method ──────
+# Same settings as notebooks/04_classification.ipynb (C1 = squared hinge, intercept,
+# zero-sum constraint, Path-Alg, Nlam 160, CV Nsubset 5, StabSel threshold 0.5,
+# theoretical lambda) EXCEPT the feature transform: the notebook passed relative
+# abundances (transform='rel'), which under a zero-sum constraint is not a
+# log-contrast model. Here X = log(count + 1): with sum(beta) = 0 the per-sample
+# log library size cancels, so this equals the log-contrast of relative abundance
+# with pseudo-count 1. One c-lasso solve per fold yields all three selections.
+CLASSO_MODES = {"classo-theoretical": "LAMfixed", "classo-CV": "CV",
+                "classo-StabSel": "StabSel"}
+
+
+def classo_scores(Xtr, ytr, Xte, seed, nlam=160) -> tuple[dict, dict]:
+    """Fit c-lasso C1 on a training fold; return test decision scores per
+    selection mode and the selected-feature mask per mode (intercept dropped)."""
+    import contextlib, io
+    from classo import classo_problem
+    Ltr, Lte = np.log(Xtr + 1.0), np.log(Xte + 1.0)
+    pb = classo_problem(Ltr, np.where(ytr == 1, 1.0, -1.0), np.ones((1, Ltr.shape[1])))
+    f, ms = pb.formulation, pb.model_selection
+    f.classification, f.concomitant, f.huber, f.intercept = True, False, False, True
+    ms.LAMfixed, ms.CV, ms.StabSel, ms.PATH = True, True, True, True
+    ms.CVparameters.seed, ms.CVparameters.Nsubset = seed, 5
+    ms.PATHparameters.Nlam = nlam
+    ms.PATHparameters.numerical_method = "Path-Alg"
+    ms.LAMfixedparameters.lam = "theoretical"
+    ms.StabSelparameters.method, ms.StabSelparameters.threshold = "first", 0.5
+    ms.StabSelparameters.seed = seed
+    with contextlib.redirect_stdout(io.StringIO()):
+        pb.solve()
+    sol = pb.solution
+    betas = {"classo-theoretical": sol.LAMfixed.beta, "classo-CV": sol.CV.beta,
+             "classo-StabSel": sol.StabSel.refit}
+    scores, selected = {}, {}
+    for name, b in betas.items():
+        b = np.asarray(b, float).ravel()          # [intercept, beta_1..beta_p]
+        sel = np.abs(b[1:]) > 1e-5                # c-lasso's own selection cut-off
+        # Score with the SELECTED coefficients only: sub-threshold numerical
+        # residue otherwise yields a non-constant score (and a spurious AUC)
+        # from a model that selected nothing.
+        scores[name] = b[0] + Lte @ np.where(sel, b[1:], 0.0)
+        selected[name] = sel
+    return scores, selected
+
+
+def evaluate_classo(X, y, groups, seed_list, n_splits=5, taxa=None):
+    """Nested evaluation identical in folds to evaluate(): same seeds, same
+    StratifiedGroupKFold on pair_nb. Lambda is chosen inside each training fold
+    by c-lasso itself (theoretical / internal CV / stability selection)."""
+    store = {m: ([], [], []) for m in CLASSO_MODES}     # oof_y, oof_p, fold_aucs
+    sel_count = {m: np.zeros(X.shape[1]) for m in CLASSO_MODES}
+    n_sel = {m: [] for m in CLASSO_MODES}
+    n_fits = 0
+    for seed in seed_list:
+        outer = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=seed)
+        for tr, te in outer.split(X, y, groups=groups):
+            assert not (set(groups[tr]) & set(groups[te])), "pair leaked across the split"
+            sc, sel = classo_scores(X[tr], y[tr], X[te], seed)
+            n_fits += 1
+            for m in CLASSO_MODES:
+                oy, op, fa = store[m]
+                oy.append(y[te]); op.append(sc[m])
+                if len(np.unique(y[te])) == 2:
+                    fa.append(roc_auc_score(y[te], sc[m]))
+                sel_count[m] += sel[m]; n_sel[m].append(int(sel[m].sum()))
+    rows, roc_store = [], {}
+    for m, (oy, op, fa) in store.items():
+        yy, pp, fa = np.concatenate(oy), np.concatenate(op), np.array(fa)
+        lo, hi = np.percentile(fa, [2.5, 97.5]) if len(fa) > 3 else (np.nan, np.nan)
+        pred = (pp > np.median(pp)).astype(int)
+        tn, fp, fn, tp = confusion_matrix(yy, pred).ravel()
+        rows.append({
+            "model": m, "auc_pooled": roc_auc_score(yy, pp),
+            "auc_mean_fold": fa.mean(), "auc_sd_fold": fa.std(),
+            "auc_ci_low": lo, "auc_ci_high": hi,
+            "pr_auc": average_precision_score(yy, pp),
+            "balanced_acc": balanced_accuracy_score(yy, pred),
+            "mcr": float((pred != yy).mean()),
+            # the main paper's rule: predict sign(score); ties (beta = 0) -> +1
+            "mcr_sign": float(((pp >= 0).astype(int) != yy).mean()),
+            "n_selected_median": float(np.median(n_sel[m])),
+            "tn": tn, "fp": fp, "fn": fn, "tp": tp, "n_folds": len(fa)})
+        roc_store[m] = (yy, pp)
+        print(f"    {m:18s} AUC={rows[-1]['auc_pooled']:.3f} [{lo:.3f}, {hi:.3f}]  "
+              f"MCR={rows[-1]['mcr']:.3f}  sign-MCR={rows[-1]['mcr_sign']:.3f}  "
+              f"median selected={rows[-1]['n_selected_median']:.0f}")
+    freq = pd.DataFrame({m: sel_count[m] / n_fits for m in CLASSO_MODES}, index=taxa)
+    freq.index.name = "taxon"
+    return pd.DataFrame(rows), roc_store, freq
+
+
+def permutation_null_classo(X, y, groups, seed, n_perm, n_splits) -> pd.DataFrame:
+    """Within-pair label permutations (as permutation_null); one c-lasso solve per
+    fold serves all three selection modes."""
+    rng = np.random.default_rng(seed)
+    uniq = np.unique(groups)
+    rows = []
+    for _ in range(n_perm):
+        yp = y.copy()
+        for g in uniq:
+            idx = np.where(groups == g)[0]
+            if len(idx) == 2 and rng.random() < 0.5:
+                yp[idx] = yp[idx][::-1]
+        oy, op = [], {m: [] for m in CLASSO_MODES}
+        outer = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=seed)
+        try:
+            for tr, te in outer.split(X, yp, groups=groups):
+                sc, _ = classo_scores(X[tr], yp[tr], X[te], seed)
+                oy.append(yp[te])
+                for m in CLASSO_MODES:
+                    op[m].append(sc[m])
+        except Exception:
+            continue
+        for m in CLASSO_MODES:
+            rows.append({"model": m, "null_auc": roc_auc_score(np.concatenate(oy),
+                                                               np.concatenate(op[m]))})
+    return pd.DataFrame(rows)
+
+
 def permutation_null(X, y, groups, seed, n_perm=200, n_splits=5,
                      model="L2-logistic") -> np.ndarray:
     """Null AUC from permuting labels WITHIN each matched pair.
@@ -234,6 +356,11 @@ def main() -> int:
     ap.add_argument("--n-perm", type=int, default=200)
     ap.add_argument("--models", default=None,
                     help="comma list; default = every available model")
+    ap.add_argument("--classo", action="store_true",
+                    help="run only the c-lasso log-contrast models "
+                         "(needs revision/env/classo-venv); writes *_classo_*")
+    ap.add_argument("--n-perm-classo", type=int, default=100,
+                    help="within-pair permutations for the c-lasso null")
     ap.add_argument("--tag", default="",
                     help="output-stem suffix so backfill runs never clobber "
                          "the CSVs behind already-quoted numbers")
@@ -275,6 +402,33 @@ def main() -> int:
                   if args.models else None)
     print(f"\n  Nested CV: {n_splits} outer folds x {args.repeats} repeats, "
           f"grouped on pair_nb")
+
+    if args.classo:
+        # Sparse log-contrast models only (revision/env/classo-venv), same folds.
+        import classo
+        print(f"  c-lasso {classo.__version__} from {classo.__file__}")
+        res, _, freq = evaluate_classo(X, y, groups, seeds, n_splits, taxa=taxa)
+        null = permutation_null_classo(X, y, groups, seed, args.n_perm_classo, n_splits)
+        stats = null.groupby("model").null_auc.agg(["mean", "std"])
+        res["null_auc_mean"] = res.model.map(stats["mean"])
+        res["null_auc_sd"] = res.model.map(stats["std"])
+        res["perm_p"] = [float((null.null_auc[null.model == m] >= a).mean())
+                         for m, a in zip(res.model, res.auc_pooled)]
+        res["n_perm"] = null.groupby("model").size().reindex(res.model).values
+        for _, r in res.iterrows():
+            print(f"    {r.model:18s} null mean={r.null_auc_mean:.4f} (must be ~0.500) "
+                  f"empirical p={r.perm_p:.3f}")
+        res["level"], res["prevalence"] = args.level, args.prevalence
+        res["partition"] = args.partition
+        res["classo_version"] = classo.__version__
+        res["detectable_auc_80pct"] = detectable_auc(int(y.sum()), int((1 - y).sum()))
+        stem = f"ml_{args.level}_{args.prevalence}_{args.partition}_classo"
+        res.to_csv(out / f"{stem}_metrics.csv", index=False)
+        freq.to_csv(out / f"{stem}_selection.csv")
+        null.to_csv(out / f"{stem}_null.csv", index=False)
+        print(f"\nWrote {out / f'{stem}_metrics.csv'}")
+        return 0
+
     res, roc_store = evaluate(X, y, groups, seeds, n_splits, models=model_list)
 
     # Per-model permutation nulls. Every model whose AUC may be quoted gets its

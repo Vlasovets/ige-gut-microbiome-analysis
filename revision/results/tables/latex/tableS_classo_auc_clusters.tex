@@ -1,0 +1,24 @@
+\begin{sidewaystable}[h!]
+\small
+\centering
+\begin{tabular}{l l c c c c c c c c c }
+ & \textbf{Rank} & \textbf{A} (12) & \textbf{B} (23) & \textbf{C} (25) & \textbf{D} (45) & \textbf{E} (22) & \textbf{F} (10) & \textbf{G} (21) & \textbf{H} (40) & \textbf{I} (70) \\
+\hline
+ & \textbf{Theoretical $\lambda_{\text{fixed}}$} & & & & & & & & & \\
+& Family & 0.57 (7) & 0.55 (10) & 0.60 (8) & 0.39 (18) & 0.69 (8) & 0.48 (4) & 0.38 (12) & 0.52 (18) & 0.40 (24) \\
+& Genus & 0.61 (5) & 0.58 (14) & 0.53 (12) & 0.45 (26) & 0.60 (10) & 0.49 (4) & 0.46 (13) & 0.53 (20) & 0.46 (36) \\
+& Species & 0.55 (5) & 0.43 (12) & 0.62 (11) & 0.48 (15) & 0.52 (10) & 0.72 (3) & 0.38 (12) & 0.50 (18) & 0.60 (31) \\
+\hline
+ & \textbf{Cross-validation $\lambda_{\text{CV}}$} & & & & & & & & & \\
+& Family & 0.58 (7) & 0.45 (5) & 0.61 (3) & 0.44 (2) & 0.64 (8) & 0.49 (6) & 0.39 (8) & 0.53 (10) & 0.42 (8) \\
+& Genus & 0.61 (2) & 0.59 (16) & 0.59 (3) & 0.43 (9) & 0.57 (6) & 0.48 (5) & 0.45 (13) & 0.51 (7) & 0.46 (15) \\
+& Species & 0.52 (3) & 0.47 (4) & 0.58 (8) & 0.53 (3) & 0.54 (4) & 0.71 (3) & 0.44 (7) & 0.50 (6) & 0.59 (32) \\
+\hline
+ & \textbf{Stability selection $\lambda_{\text{SS}}$} & & & & & & & & & \\
+& Family & 0.54 (3) & 0.48 (3) & 0.62 (3) & 0.45 (3) & 0.69 (4) & 0.54 (2) & 0.42 (2) & 0.53 (3) & 0.45 (2) \\
+& Genus & 0.53 (2) & 0.44 (2) & 0.57 (1) & 0.44 (0) & 0.51 (2) & 0.50 (0) & 0.51 (0) & 0.47 (2) & 0.46 (2) \\
+& Species & 0.50 (2) & 0.48 (3) & 0.60 (4) & 0.55 (2) & 0.52 (2) & 0.65 (2) & 0.46 (2) & 0.54 (3) & 0.46 (3) \\
+\hline
+\end{tabular}
+\caption{Log-contrast classification of the IgE clusters (A--I) across taxonomic ranks. Out-of-sample AUC of the log-contrast classification models, with the median number of taxa selected per training fold in parentheses. Each group was compared with its sex-, age- and BMI-matched non-sensitized controls (number of matched pairs in parentheses in the column header); models were evaluated by cross-validation (5 folds $\times$ 10 repeats, both members of a pair in the same fold). Bold: permutation $p<0.05$ (100 within-pair label permutations). Prevalence filter: 10\% (family, genus), 5\% (species, ASV). Clusters A and F have 12 and 10 pairs, too few for reliable classification.\label{tab:classo_auc_clusters}}
+\end{sidewaystable}

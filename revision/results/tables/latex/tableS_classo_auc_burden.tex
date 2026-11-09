@@ -1,0 +1,27 @@
+\begin{sidewaystable}[h!]
+\small
+\centering
+\begin{tabular}{l l c c c c c c }
+ & \textbf{Rank} & \textbf{Any IgE} (221) & \textbf{Single} (44) & \textbf{Multiple} (196) & \textbf{High score} (57) & \textbf{Medium score} (107) & \textbf{Low score} (104) \\
+\hline
+ & \textbf{Theoretical $\lambda_{\text{fixed}}$} & & & & & & \\
+& Family & 0.55 (23) & 0.40 (18) & 0.57 (26) & 0.60 (14) & 0.52 (26) & 0.50 (25) \\
+& Genus & 0.55 (57) & 0.40 (25) & \textbf{0.57} (52) & 0.51 (30) & 0.52 (45) & 0.55 (42) \\
+& Species & 0.52 (30) & 0.64 (23) & 0.49 (33) & 0.50 (24) & 0.44 (29) & 0.56 (34) \\
+& ASV & 0.48 (130) & -- & -- & -- & -- & -- \\
+\hline
+ & \textbf{Cross-validation $\lambda_{\text{CV}}$} & & & & & & \\
+& Family & 0.57 (3) & 0.42 (6) & \textbf{0.57} (5) & 0.58 (6) & 0.50 (8) & 0.49 (5) \\
+& Genus & \textbf{0.56} (6) & 0.42 (5) & \textbf{0.57} (18) & 0.51 (16) & 0.51 (32) & 0.53 (10) \\
+& Species & 0.51 (4) & 0.61 (23) & 0.52 (4) & 0.48 (10) & 0.46 (2) & 0.54 (16) \\
+& ASV & 0.49 (5) & -- & -- & -- & -- & -- \\
+\hline
+ & \textbf{Stability selection $\lambda_{\text{SS}}$} & & & & & & \\
+& Family & 0.56 (4) & 0.42 (3) & \textbf{0.57} (5) & 0.55 (4) & 0.51 (4) & 0.52 (4) \\
+& Genus & \textbf{0.59} (4) & 0.42 (2) & \textbf{0.57} (4) & 0.52 (2) & 0.51 (2) & 0.53 (3) \\
+& Species & 0.51 (3) & 0.54 (3) & 0.54 (3) & 0.49 (3) & 0.46 (3) & 0.51 (4) \\
+& ASV & 0.51 (0) & -- & -- & -- & -- & -- \\
+\hline
+\end{tabular}
+\caption{Log-contrast classification of the IgE frequency and score groups across taxonomic ranks. Out-of-sample AUC of the log-contrast classification models, with the median number of taxa selected per training fold in parentheses. Each group was compared with its sex-, age- and BMI-matched non-sensitized controls (number of matched pairs in parentheses in the column header); models were evaluated by cross-validation (5 folds $\times$ 10 repeats, both members of a pair in the same fold). Bold: permutation $p<0.05$ (100 within-pair label permutations). Prevalence filter: 10\% (family, genus), 5\% (species, ASV); the ASV rank was analyzed for all sensitized individuals only.\label{tab:classo_auc_burden}}
+\end{sidewaystable}

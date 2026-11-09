@@ -1,0 +1,18 @@
+\begin{table}[h!]
+\centering
+\footnotesize
+\begin{tabular}{l c c c c}
+\textbf{Model} & \textbf{Analyses} & \textbf{AUC, median (range)} & \textbf{95\% CI excludes 0.5} & \textbf{Permutation $p<0.05$} \\
+\hline
+Log-contrast, theoretical $\lambda$ & 46 & 0.52 (0.38--0.72) & 1 & 1 of 46 \\
+Log-contrast, cross-validation & 46 & 0.52 (0.39--0.71) & 0 & 3 of 46 \\
+Log-contrast, stability selection & 46 & 0.51 (0.42--0.69) & 1 & 3 of 46 \\
+L1-penalized logistic & 46 & 0.49 (0.42--0.71) & 0 & 2 of 46 \\
+L2-penalized logistic & 46 & 0.51 (0.36--0.67) & 0 & 4 of 46 \\
+Random forest & 46 & 0.48 (0.37--0.77) & 0 & 1 of 46 \\
+Gradient boosting & 46 & 0.50 (0.38--0.61) & 0 & 0 of 46 \\
+XGBoost & 46 & 0.49 (0.31--0.74) & 0 & 0 of 46 \\
+\hline
+\end{tabular}
+\caption{Classification benchmark across all analyses: family and genus (10\% prevalence filter) and species (5\%) for each of the 15 IgE groups, and ASV (5\%) for all sensitized participants, each vs.\ matched non-sensitized controls. Design and models as in Table~\ref{tab:ml_benchmark}. The largest AUCs occur in the smallest groups and have confidence intervals spanning 0.5.\label{tab:ml_benchmark_all}}
+\end{table}
