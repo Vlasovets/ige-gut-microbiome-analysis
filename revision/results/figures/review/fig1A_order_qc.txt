@@ -1,0 +1,9 @@
+recomputed: 275 individuals x 104 IgEs, 2579 positive cells
+published heatmap at x 1081-8471, y 967-4069 px; 2579 IgE-positive cells
+IgE rows = Jaccard leaf order, bottom-up: every published column has an exact match = True
+LAC tree with 96 of 274 branches flipped -> 0 of 28600 cells differ from the published heatmap
+(unflipped scipy order: 912 cells differ)
+cluster sequence along published columns: ABCDEFGHI
+published LAC strip row 1 vs recomputed LAC1: Spearman 0.999
+published LAC strip row 2 vs recomputed LAC2: Spearman 0.999
+published LAC strip row 3 vs recomputed LAC3: Spearman 0.998
