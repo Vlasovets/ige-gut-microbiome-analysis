@@ -1,0 +1,22 @@
+\begin{table}[h!]
+\centering
+\footnotesize
+\begin{tabular}{l l r r r}
+\textbf{Taxon set} & \textbf{Database} & \textbf{Median rank} & \textbf{$p$} & \textbf{FDR} \\
+\hline
+Acetate producers (gutMGene) & Metabolite producers & 0.664 & 0.173 & 1.00 \\
+Enzyme: catalase & Bacterial physiology & -1.150 & 0.185 & 1.00 \\
+Decreased in Crohn Disease & Health associations & -0.448 & 0.191 & 1.00 \\
+Equol producers (gutMGene) & Metabolite producers & -0.580 & 0.199 & 1.00 \\
+Increased in COVID-19 & Health associations & 0.482 & 0.202 & 1.00 \\
+Enzyme: acid phosphatase & Bacterial physiology & -0.883 & 0.204 & 1.00 \\
+MGB040 Menaquinone synthesis (vitamin K2) I & Gut-brain modules & -0.645 & 0.212 & 1.00 \\
+MGB049 Tryptophan degradation & Gut-brain modules & 0.242 & 0.273 & 1.00 \\
+Enzyme: glutamyl-glutamate arylamidase & Bacterial physiology & -0.231 & 0.359 & 1.00 \\
+Increased in Arthritis, Rheumatoid & Health associations & -0.286 & 0.367 & 1.00 \\
+Vitamin A producers (MiMeDB) & Metabolite producers & -0.076 & 0.829 & 1.00 \\
+Folic acid producers (MiMeDB) & Metabolite producers & 0.069 & 1.000 & 1.00 \\
+\hline
+\end{tabular}
+\caption{Taxon set enrichment analysis (TaxSEA) for all 275 sensitized vs.\ 233 non-sensitized individuals. Species were ranked by the signed \texttt{LinDA} test statistic from the differential abundance model adjusted for sex, age and BMI (5\% prevalence filter, 60 species, 53 mapped to the TaxSEA database). Shown are the 10 sets with the smallest $p$-value and the folic acid and vitamin A producer sets. Median rank: median ranking statistic of the set members (positive, higher in sensitized individuals). FDR: Benjamini--Hochberg within each database, as returned by TaxSEA. Across all six analyses (10\%, 5\% and 1\% prevalence filters; ranking by test statistic or log$_2$ fold change; 94--129 sets each), no set reached FDR $< 0.1$ (smallest FDR 0.64).\label{tab:taxsea_recomputed}}
+\end{table}

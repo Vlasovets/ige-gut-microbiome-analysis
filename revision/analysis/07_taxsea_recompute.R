@@ -20,7 +20,10 @@
 #
 # Usage:
 #   conda activate taxsea-env
-#   Rscript revision/analysis/07_taxsea_recompute.R
+#   Rscript revision/analysis/07_taxsea_recompute.R                 # matched pairs
+#   Rscript revision/analysis/07_taxsea_recompute.R --design full   # full cohort,
+#       ranking from the covariate-adjusted LinDA of module 02 --design full;
+#       writes taxsea_recomputed_full.csv / _params_full.txt
 
 suppressPackageStartupMessages({
   library(TaxSEA)
@@ -31,6 +34,10 @@ args_raw <- commandArgs(trailingOnly = FALSE)
 script <- sub("--file=", "", args_raw[grep("--file=", args_raw)])
 REVISION <- normalizePath(file.path(dirname(script), ".."))
 cfg <- yaml::read_yaml(file.path(REVISION, "config", "config.yaml"))
+a <- commandArgs(trailingOnly = TRUE)
+DESIGN <- if (length(i <- which(a == "--design")) && i < length(a)) a[i + 1] else "matched"
+stopifnot(DESIGN %in% c("matched", "full"))
+SUFFIX <- if (DESIGN == "full") "_full" else ""
 
 PIPE <- cfg$paths$pipeline_results
 OUT  <- file.path(REVISION, "results", "tables")
@@ -53,6 +60,7 @@ PARAMS <- list(
   max_set_size   = 100,
   seed           = cfg$statistics$seed,
   partition      = "any_ige",
+  design         = DESIGN,
   level          = "species"
 )
 message("=== Module 07: TaxSEA re-computation ===")
@@ -71,6 +79,16 @@ for (h in HEADLINE)
 
 # ── Run one enrichment ───────────────────────────────────────────────────
 run_one <- function(prev, rank_by) {
+  if (DESIGN == "full") {
+    # all sensitized vs all 233 controls, ~ IgE + sex + age + BMI (module 02)
+    f <- file.path(REVISION, "results", "da_full",
+                   sprintf("da_long_species_%s_%s.csv", prev, PARAMS$partition))
+    if (!file.exists(f)) return(NULL)
+    d <- read.csv(f, stringsAsFactors = FALSE)
+    d <- d[d$method == "LinDA", ]
+    taxon <- d$taxon
+    stat <- if (rank_by == "stat") d$stat else d$effect_log2
+  } else {
   f <- file.path(PIPE, "species", prev, PARAMS$partition, "da", "linda_results.csv")
   if (!file.exists(f)) return(NULL)
   d <- read.csv(f, stringsAsFactors = FALSE)
@@ -78,6 +96,7 @@ run_one <- function(prev, rank_by) {
   # rank, including species. Normalise it.
   taxon <- d$family
   stat <- if (rank_by == "stat") d$stat else d$log2FoldChange
+  }
   keep <- !is.na(stat) & !is.na(taxon) & nzchar(taxon)
   taxon <- taxon[keep]; stat <- stat[keep]
   n_raw <- length(taxon)
@@ -232,7 +251,7 @@ if (nrow(mp))
                   min(mp[[q_col]], na.rm = TRUE)))
 
 # ── Write outputs ────────────────────────────────────────────────────────
-write.csv(res, file.path(OUT, "taxsea_recomputed.csv"), row.names = FALSE)
+write.csv(res, file.path(OUT, paste0("taxsea_recomputed", SUFFIX, ".csv")), row.names = FALSE)
 writeLines(c(
   "# TaxSEA re-computation parameters",
   "# Every field below was undocumented in the submitted manuscript.",
@@ -240,7 +259,7 @@ writeLines(c(
   "",
   "# sessionInfo",
   capture.output(sessionInfo())
-), file.path(OUT, "taxsea_recomputed_params.txt"))
+), file.path(OUT, paste0("taxsea_recomputed_params", SUFFIX, ".txt")))
 
-message(sprintf("\nWrote %s", file.path(OUT, "taxsea_recomputed.csv")))
+message(sprintf("\nWrote %s", file.path(OUT, paste0("taxsea_recomputed", SUFFIX, ".csv"))))
 message("Done.")
