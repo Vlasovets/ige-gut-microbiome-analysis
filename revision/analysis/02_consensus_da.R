@@ -36,6 +36,10 @@
 # Usage:
 #   Rscript revision/analysis/02_consensus_da.R \
 #     --level species --prevalence prev05 --partition any_ige
+#
+# --design full (default: matched) reads the full-cohort inputs built by
+# 02f_full_cohort_inputs.py - every sensitized member vs all 233 controls,
+# same formula - and writes to results/da_full/.
 
 suppressPackageStartupMessages({
   library(yaml); library(LinDA); library(ANCOMBC); library(ALDEx2)
@@ -56,20 +60,25 @@ LEVEL <- getarg("--level", "species")
 PREV  <- getarg("--prevalence", "prev05")
 PART  <- getarg("--partition", "any_ige")
 MC    <- as.integer(getarg("--mc-samples", "128"))
+DESIGN <- getarg("--design", "matched")
+stopifnot(DESIGN %in% c("matched", "full"))
 
 cfg  <- yaml::read_yaml(file.path(REVISION, "config", "config.yaml"))
 PIPE <- cfg$paths$pipeline_results
-OUT  <- file.path(REVISION, "results", "da")
+OUT  <- file.path(REVISION, "results",
+                  if (DESIGN == "full") "da_full" else "da")
 dir.create(OUT, recursive = TRUE, showWarnings = FALSE)
 SEED <- cfg$statistics$seed
 FORMULA <- "ige_status + sex + age + bmi"
 
-message(sprintf("=== Consensus DA: %s / %s / %s ===", LEVEL, PREV, PART))
+message(sprintf("=== Consensus DA: %s / %s / %s [%s design] ===", LEVEL, PREV, PART, DESIGN))
 message(sprintf("  formula: ~ %s | ALDEx2 mc.samples=%d | seed=%d",
                 FORMULA, MC, SEED))
 
 # ── Load the matched, prevalence-filtered input ──────────────────────────
-src <- file.path(PIPE, LEVEL, PREV, PART, "source")
+src <- if (DESIGN == "full") {
+  file.path(REVISION, "results", "full_cohort", "inputs", LEVEL, PREV, PART, "source")
+} else file.path(PIPE, LEVEL, PREV, PART, "source")
 oi <- read.csv(file.path(src, "otu_ige.csv"),     row.names = 1, check.names = FALSE)
 oc <- read.csv(file.path(src, "otu_non_ige.csv"), row.names = 1, check.names = FALSE)
 mi <- read.csv(file.path(src, "sample_data_ige.csv"),     row.names = 1)

@@ -1,0 +1,18 @@
+\begin{table}[h!]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l r r r r r r r r}
+ & & \multicolumn{5}{c}{\textbf{Tests significant (\%)}} & & \\
+\textbf{Rank} & \textbf{Tests} & \textbf{ANCOM-BC2} & \textbf{limma-voom} & \textbf{LinDA} & \textbf{ZicoSeq} & \textbf{ALDEx2} & \textbf{Hits} & \textbf{$\geq$2 methods} \\
+\hline
+Family & 2,445 & 8.75 & 0.98 & 0.45 & 0.00 & 0.00 & 242 & 7 (2.9\%) \\
+Genus & 6,540 & 10.21 & 1.47 & 0.18 & 0.11 & 0.00 & 748 & 32 (4.3\%) \\
+Species & 3,555 & 15.44 & 9.17 & 0.23 & 0.23 & 0.00 & 820 & 71 (8.7\%) \\
+ASV & 33,540 & 14.39 & 5.10 & 0.24 & 0.18 & 0.00 & 6,216 & 465 (7.5\%) \\
+\hline
+All ranks & 46,080 & 13.58 & 4.68 & 0.25 & 0.17 & 0.00 & 8,026 & 575 (7.2\%) \\
+\hline
+\end{tabular}
+\caption{Differential abundance of IgE sensitization across taxonomic ranks and methods, full cohort (all sensitized individuals vs.\ the 233 IgE-negative controls), adjusted for sex, age and BMI. Each rank comprises 45 analyses (3 prevalence filters $\times$ 15 IgE groups); Tests is the number of features retained by the prevalence filters, summed over these analyses, and is the denominator for every method; ANCOM-BC2 and ZicoSeq apply their own internal filtering at the 1\% filter and test fewer features, and features a method did not test are counted as not significant. A test is significant at Benjamini--Hochberg $q < 0.05$ within its analysis. Hits: taxa called significant by at least one method in a given analysis; $\geq$2 methods: hits also called significant by at least one other method (3 genus-level hits by three methods, none by four or five).\label{tab:da_ranks}}
+\end{table}

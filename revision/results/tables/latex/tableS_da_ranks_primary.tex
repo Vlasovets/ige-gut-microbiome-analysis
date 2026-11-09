@@ -1,0 +1,31 @@
+\begin{table}[h!]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{l r r r r r r r}
+ & & & \multicolumn{3}{c}{\textbf{Features significant (\%)}} & & \\
+\textbf{Rank} & \textbf{Prevalence} & \textbf{Features} & \textbf{ANCOM-BC2} & \textbf{limma-voom} & \textbf{ZicoSeq} & \textbf{Hits} & \textbf{$\geq$2 methods} \\
+\hline
+Family & None & 89 & 15.7 & 7.9 & 0.0 & 20 & 1 (5.0\%) \\
+ & 1\% & 65 & 27.7 & 3.1 & 0.0 & 20 & 0 (0.0\%) \\
+ & 5\% & 53 & 24.5 & 0.0 & 0.0 & 13 & 0 (0.0\%) \\
+ & 10\% & 45 & 13.3 & 0.0 & 0.0 & 6 & 0 (0.0\%) \\
+\hline
+Genus & None & 263 & 29.3 & 12.9 & 0.4 & 96 & 16 (16.7\%) \\
+ & 1\% & 188 & 40.4 & 5.9 & 0.5 & 80 & 8 (10.0\%) \\
+ & 5\% & 136 & 30.1 & 0.0 & 0.0 & 41 & 0 (0.0\%) \\
+ & 10\% & 112 & 17.0 & 0.0 & 0.9 & 20 & 0 (0.0\%) \\
+\hline
+Species & None & 233 & 30.0 & 8.6 & 0.0 & 80 & 10 (12.5\%) \\
+ & 1\% & 133 & 51.9 & 14.3 & 0.0 & 79 & 9 (11.4\%) \\
+ & 5\% & 60 & 46.7 & 1.7 & 0.0 & 28 & 1 (3.6\%) \\
+ & 10\% & 44 & 31.8 & 2.3 & 0.0 & 14 & 1 (7.1\%) \\
+\hline
+ASV & None & 6,958 & 10.7 & 1.7 & 0.0 & 800 & 63 (7.9\%) \\
+ & 1\% & 1,459 & 51.7 & 10.6 & 0.0 & 819 & 90 (11.0\%) \\
+ & 5\% & 489 & 60.5 & 3.3 & 0.0 & 302 & 10 (3.3\%) \\
+ & 10\% & 288 & 39.9 & 0.7 & 0.0 & 116 & 1 (0.9\%) \\
+\hline
+\end{tabular}
+\caption{Differential abundance of IgE sensitization across taxonomic ranks, prevalence filters and methods for the primary contrast: all 275 sensitized individuals vs.\ the 233 IgE-negative controls (full cohort), adjusted for sex, age and BMI. Each row is one analysis. Prevalence ``None'': no prevalence filter, every feature present in at least one of the 508 participants, as in the submitted analysis (6,958 ASVs). Features: number of features in the analysis, used as the denominator for every method. ANCOM-BC2, ZicoSeq and ALDEx2 apply their own internal filtering and test fewer features in some analyses; features a method did not test are counted as not significant. LinDA and ALDEx2 called no feature significant in any of these analyses and are not shown. ZicoSeq uses 4,999 permutations, so with more than 250 tested features it cannot reach $q < 0.05$ (all ASV rows). A test is significant at Benjamini--Hochberg $q < 0.05$ within its analysis. Hits: features called significant by at least one method; $\geq$2 methods: hits also called significant by a second method (none by three or more).\label{tab:da_ranks_primary}}
+\end{table}

@@ -1,0 +1,7 @@
+level,method,calls,n,p05,null_median_calls,null_max,null_p05
+asv,ANCOMBC,0,489,0.055,0.0,1,0.049
+asv,ANCOMBC2,296,489,0.652,261.5,311,0.568
+asv,LinDA,0,489,0.051,0.0,3,0.051
+family,ANCOMBC,0,53,0.113,0.0,1,0.043
+family,ANCOMBC2,13,53,0.302,10.0,22,0.266
+family,LinDA,0,53,0.094,0.0,1,0.06

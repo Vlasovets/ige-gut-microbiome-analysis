@@ -37,6 +37,10 @@
 # Usage:
 #   Rscript revision/analysis/02d_extended_da.R \
 #     --level species --prevalence prev05 --partition any_ige
+#
+# --design full (default: matched) reads the full-cohort inputs built by
+# 02f_full_cohort_inputs.py - every sensitized member vs all 233 controls,
+# same formula - and writes to results/da_extended_full/.
 
 suppressPackageStartupMessages({
   library(yaml); library(GUniFrac); library(limma)
@@ -56,21 +60,26 @@ LEVEL <- getarg("--level", "species")
 PREV  <- getarg("--prevalence", "prev05")
 PART  <- getarg("--partition", "any_ige")
 NPERM <- as.integer(getarg("--nperm", "4999"))
+DESIGN <- getarg("--design", "matched")
+stopifnot(DESIGN %in% c("matched", "full"))
 
 cfg  <- yaml::read_yaml(file.path(REVISION, "config", "config.yaml"))
 PIPE <- cfg$paths$pipeline_results
-OUT  <- file.path(REVISION, "results", "da_extended")
+OUT  <- file.path(REVISION, "results",
+                  if (DESIGN == "full") "da_extended_full" else "da_extended")
 dir.create(OUT, recursive = TRUE, showWarnings = FALSE)
 SEED <- cfg$statistics$seed
 set.seed(SEED)
 FORMULA <- "ige_status + sex + age + bmi"
 
-message(sprintf("=== Extended DA: %s / %s / %s ===", LEVEL, PREV, PART))
+message(sprintf("=== Extended DA: %s / %s / %s [%s design] ===", LEVEL, PREV, PART, DESIGN))
 message(sprintf("  formula: ~ %s | ZicoSeq nperm=%d | seed=%d",
                 FORMULA, NPERM, SEED))
 
 # ── Load exactly what module 02 loads ────────────────────────────────────
-src <- file.path(PIPE, LEVEL, PREV, PART, "source")
+src <- if (DESIGN == "full") {
+  file.path(REVISION, "results", "full_cohort", "inputs", LEVEL, PREV, PART, "source")
+} else file.path(PIPE, LEVEL, PREV, PART, "source")
 oi <- read.csv(file.path(src, "otu_ige.csv"),     row.names = 1, check.names = FALSE)
 oc <- read.csv(file.path(src, "otu_non_ige.csv"), row.names = 1, check.names = FALSE)
 mi <- read.csv(file.path(src, "sample_data_ige.csv"),     row.names = 1)
@@ -213,7 +222,11 @@ if (!is.null(zi)) {
 # by adjustment. This is a DIFFERENT route to the same confounding control, and
 # is reported as such.
 message("\n  [2/3] Paired Wilcoxon on CLR ...")
-wil <- tryCatch({
+# No pairs in the full-cohort design, and a rank test cannot carry the
+# covariates, so it would be the one unadjusted method. Skipped there.
+wil <- if (DESIGN == "full") {
+  message("    skipped: full-cohort design has no pairs"); NULL
+} else tryCatch({
   stopifnot("pair_nb" %in% names(meta))
   clr <- t(apply(counts_pxn + 0.5, 2, function(x) log(x) - mean(log(x))))
   ig <- meta$ige_status == "ige"
